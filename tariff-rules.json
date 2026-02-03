@@ -2,7 +2,7 @@
   "meta": {
     "rulesVersion": "2026.02.03-001",
     "updatedAt": "2026-02-03T10:30:00-05:00",
-    "statusText": "Live rules loaded"
+    "statusText": "Live rules loaded from tariff-rules.json"
   },
   "countries": {
     "CN": "🇨🇳 China",
@@ -11,26 +11,52 @@
     "JP": "🇯🇵 Japan",
     "TW": "🇹🇼 Taiwan",
     "MX": "🇲🇽 Mexico",
-    "CA": "🇨🇦 Canada"
+    "CA": "🇨🇦 Canada",
+    "MY": "🇲🇾 Malaysia",
+    "IN": "🇮🇳 India",
+    "TH": "🇹🇭 Thailand",
+    "SG": "🇸🇬 Singapore",
+    "AU": "🇦🇺 Australia",
+    "IL": "🇮🇱 Israel",
+    "JO": "🇯🇴 Jordan",
+    "MA": "🇲🇦 Morocco",
+    "CL": "🇨🇱 Chile",
+    "PE": "🇵🇪 Peru",
+    "CO": "🇨🇴 Colombia",
+    "PA": "🇵🇦 Panama",
+    "BH": "🇧🇭 Bahrain",
+    "OM": "🇴🇲 Oman",
+    "CR": "🇨🇷 Costa Rica",
+    "DO": "🇩🇴 Dominican Republic",
+    "SV": "🇸🇻 El Salvador",
+    "GT": "🇬🇹 Guatemala",
+    "HN": "🇭🇳 Honduras",
+    "NI": "🇳🇮 Nicaragua"
   },
   "ftaCountries": {
     "MX": { "fta": "USMCA", "type": "conditional", "minRate": 0, "description": "0% if origin rules met" },
     "CA": { "fta": "USMCA", "type": "conditional", "minRate": 0, "description": "0% if origin rules met" },
-    "KR": { "fta": "KORUS FTA", "type": "minimum", "minRate": 0.15, "description": "MIN 15%" }
+    "KR": { "fta": "KORUS FTA", "type": "minimum", "minRate": 0.15, "description": "Minimum 15% rule" },
+
+    "SG": { "fta": "US-Singapore FTA", "type": "standard", "minRate": 0, "description": "0% duty-free" },
+    "AU": { "fta": "US-Australia FTA", "type": "standard", "minRate": 0, "description": "0% duty-free" },
+    "IL": { "fta": "US-Israel FTA", "type": "standard", "minRate": 0, "description": "0% duty-free" },
+    "JO": { "fta": "US-Jordan FTA", "type": "standard", "minRate": 0, "description": "0% duty-free" }
   },
   "hsCodeRules": {
     "8507600010": { "description": "Lithium-ion batteries for electric vehicles", "isAutoPartViaSection232": true },
     "8507600020": { "description": "Lithium-ion batteries (other)", "isAutoPartViaSection232": false }
   },
-  "mfnRates": {
-    "850760": 0.034,
-    "8507": 0.035,
-    "8703": 0.025
-  },
   "productDescriptions": {
     "8507": "Electric storage batteries",
     "8703": "Motor vehicles",
     "7208": "Flat-rolled steel"
+  },
+  "mfnRates": {
+    "850760": 0.034,
+    "8507": 0.035,
+    "8703": 0.025,
+    "7208": 0.0
   },
   "reciprocalRates": {
     "VN": 0.20,
@@ -45,7 +71,7 @@
     {
       "date": "2026-02-03",
       "headline": "Rules updated",
-      "body": "Rule set refreshed from tariff-rules.json"
+      "body": "tariff-rules.json refreshed. Users can click Update or refresh page."
     }
   ]
 }
