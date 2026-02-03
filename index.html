@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🤖 US Tariff Lookup</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h1 { margin-bottom: 10px; }
+    .meta { font-size: 13px; color: #334155; margin-bottom: 15px; }
+    .row { display: flex; gap: 10px; margin-bottom: 10px; }
+    select, input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #1e3c72;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover { opacity: 0.9; }
+    .result {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+    }
+    .error {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+    .ok {
+      background: #dcfce7;
+      border: 1px solid #bbf7d0;
+      color: #065f46;
+    }
+    .small { font-size: 12px; color: #64748b; }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>🤖 US Tariff Lookup</h1>
+
+    <div class="meta" id="rulesMeta">Rules: not loaded yet</div>
+
+    <div class="row">
+      <select id="origin">
+        <option value="">Select Country</option>
+        <option value="KR">South Korea (KR)</option>
+        <option value="MX">Mexico (MX)</option>
+        <option value="CA">Canada (CA)</option>
+        <option value="CN">China (CN)</option>
+        <option value="VN">Vietnam (VN)</option>
+        <option value="JP">Japan (JP)</option>
+      </select>
+
+      <input id="hsCode" placeholder="HS Code (ex: 8507600010)" maxlength="10" />
+    </div>
+
+    <div class="row" style="align-items:center;">
+      <label style="flex:1; display:flex; gap:10px; align-items:center;">
+        <input type="checkbox" id="usmcaCompliant" />
+        USMCA compliant?
+      </label>
+      <button style="flex:1;" onclick="refreshRules(true)">⬇️ Update rules now</button>
+    </div>
+
+    <button onclick="lookupTariff()">🔎 Calculate</button>
+
+    <div id="output" class="result" style="display:none;"></div>
+    <div class="small" style="margin-top:10px;">
+      • 새로고침하면 rules.json을 다시 불러옵니다.<br>
+      • 1시간마다 자동으로 rules 갱신도 시도합니다.
+    </div>
+  </div>
+
+  <script>
+    // ✅ GitHub Pages에 올리면 같은 폴더에서 이 파일을 읽습니다.
+    const RULES_URL = "./tariff-rules.json";
+
+    // 1시간 = 3,600,000ms (숫자 더블체크 완료)
+    const AUTO_REFRESH_MS = 60 * 60 * 1000;
+
+    let RULES = null;
+
+    function urlNoCache(url) {
+      const sep = url.includes("?") ? "&" : "?";
+      return url + sep + "v=" + Date.now();
+    }
+
+    async function refreshRules(showAlert) {
+      const metaEl = document.getElementById("rulesMeta");
+      metaEl.textContent = "Rules: loading...";
+
+      try {
+        const res = await fetch(urlNoCache(RULES_URL), { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        const json = await res.json();
+        if (!json.ftaCountries || !json.mfnRates) {
+          throw new Error("Invalid schema: missing ftaCountries or mfnRates");
+        }
+
+        RULES = json;
+
+        const version = RULES.meta?.rulesVersion ?? "(no version)";
+        const updatedAt = RULES.meta?.updatedAt ?? "(no updatedAt)";
+        metaEl.textContent = `Rules loaded ✓ version=${version} • updatedAt=${updatedAt}`;
+
+        return true;
+      } catch (err) {
+        metaEl.textContent = "Rules: FAILED to load";
+        if (showAlert) alert("Rules update failed: " + err.message);
+        return false;
+      }
+    }
+
+    function getMFNRate(hsCode) {
+      const k6 = hsCode.substring(0, 6);
+      const k4 = hsCode.substring(0, 4);
+      if (typeof RULES.mfnRates[k6] === "number") return RULES.mfnRates[k6];
+      if (typeof RULES.mfnRates[k4] === "number") return RULES.mfnRates[k4];
+      return 0.10;
+    }
+
+    function calculateTariff(hsCode, origin, usmcaCompliant) {
+      const ftaInfo = RULES.ftaCountries[origin] || null;
+      const mfn = getMFNRate(hsCode);
+
+      let total = 0;
+      let notes = [];
+
+      if (ftaInfo) {
+        if (ftaInfo.type === "conditional") {
+          if (usmcaCompliant) {
+            total = 0;
+            notes.push(`${ftaInfo.fta}: duty-free (compliant)`);
+          } else {
+            total = mfn + (RULES.reciprocalRates?.DEFAULT ?? 0.10);
+            notes.push(`${ftaInfo.fta}: NOT compliant → MFN + reciprocal`);
+          }
+        } else if (ftaInfo.type === "minimum") {
+          total = Math.max(mfn, ftaInfo.minRate);
+          notes.push(`${ftaInfo.fta}: minimum rate applies`);
+        } else {
+          total = 0;
+          notes.push(`${ftaInfo.fta}: duty-free`);
+        }
+      } else {
+        total = mfn + (RULES.reciprocalRates?.[origin] ?? RULES.reciprocalRates?.DEFAULT ?? 0.10);
+        notes.push("No FTA: MFN + reciprocal");
+      }
+
+      return { total, notes };
+    }
+
+    async function lookupTariff() {
+      const origin = document.getElementById("origin").value;
+      const hsCode = document.getElementById("hsCode").value.trim();
+      const usmcaCompliant = document.getElementById("usmcaCompliant").checked;
+
+      const out = document.getElementById("output");
+      out.style.display = "block";
+
+      if (!RULES) {
+        out.className = "result error";
+        out.innerHTML = "Rules not loaded yet. Click 'Update rules now' or refresh page.";
+        return;
+      }
+
+      if (!origin || hsCode.length < 6) {
+        out.className = "result error";
+        out.innerHTML = "Please select origin and enter HS code (min 6 digits).";
+        return;
+      }
+
+      const r = calculateTariff(hsCode, origin, usmcaCompliant);
+      out.className = "result ok";
+      out.innerHTML = `
+        <b>Total tariff:</b> ${(r.total * 100).toFixed(1)}%<br>
+        <b>Notes:</b> ${r.notes.join(" / ")}
+      `;
+    }
+
+    window.addEventListener("load", async () => {
+      await refreshRules(false);
+      setInterval(() => refreshRules(false), AUTO_REFRESH_MS);
+    });
+  </script>
+</body>
+</html>
