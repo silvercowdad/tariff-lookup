@@ -100,117 +100,390 @@
   </div>
 
   <script>
-    // ✅ GitHub Pages에 올리면 같은 폴더에서 이 파일을 읽습니다.
-    const RULES_URL = "./tariff-rules.json";
+  // =========================
+  // CONFIG
+  // =========================
+  const RULES_URL = "./tariff-rules.json";
+  const AUTO_REFRESH_MS = 60 * 60 * 1000; // 1 hour = 3,600,000ms (더블체크 완료)
 
-    // 1시간 = 3,600,000ms (숫자 더블체크 완료)
-    const AUTO_REFRESH_MS = 60 * 60 * 1000;
+  function urlNoCache(url) {
+    const sep = url.includes("?") ? "&" : "?";
+    return url + sep + "v=" + Date.now();
+  }
 
-    let RULES = null;
+  // =========================
+  // RULES (fetched)
+  // =========================
+  let RULES = null;
 
-    function urlNoCache(url) {
-      const sep = url.includes("?") ? "&" : "?";
-      return url + sep + "v=" + Date.now();
+  // fallback (fetch 실패 시 최소 동작)
+  const FALLBACK_RULES = {
+    meta: { rulesVersion: "fallback", updatedAt: null, statusText: "Fallback rules (fetch failed)" },
+    ftaCountries: {},
+    countries: {},
+    hsCodeRules: {},
+    mfnRates: {},
+    reciprocalRates: { DEFAULT: 0.10 },
+    productDescriptions: {}
+  };
+
+  async function refreshRules(showAlertOnFailure = false) {
+    const statusEl = document.getElementById("apiStatusText");
+    const metaEl = document.getElementById("rulesMeta");
+
+    if (statusEl) statusEl.textContent = "Updating rules from internet...";
+    if (metaEl) {
+      metaEl.classList.remove("error");
+      metaEl.textContent = "Rules: updating...";
     }
 
-    async function refreshRules(showAlert) {
-      const metaEl = document.getElementById("rulesMeta");
-      metaEl.textContent = "Rules: loading...";
+    try {
+      const res = await fetch(urlNoCache(RULES_URL), { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const json = await res.json();
 
-      try {
-        const res = await fetch(urlNoCache(RULES_URL), { cache: "no-store" });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-
-        const json = await res.json();
-        if (!json.ftaCountries || !json.mfnRates) {
-          throw new Error("Invalid schema: missing ftaCountries or mfnRates");
-        }
-
-        RULES = json;
-
-        const version = RULES.meta?.rulesVersion ?? "(no version)";
-        const updatedAt = RULES.meta?.updatedAt ?? "(no updatedAt)";
-        metaEl.textContent = `Rules loaded ✓ version=${version} • updatedAt=${updatedAt}`;
-
-        return true;
-      } catch (err) {
-        metaEl.textContent = "Rules: FAILED to load";
-        if (showAlert) alert("Rules update failed: " + err.message);
-        return false;
+      // 최소 스키마 체크
+      if (!json || !json.ftaCountries || !json.mfnRates || !json.reciprocalRates) {
+        throw new Error("Invalid rules schema (need ftaCountries/mfnRates/reciprocalRates)");
       }
+
+      RULES = json;
+
+      const version = RULES.meta?.rulesVersion ?? "(no version)";
+      const updatedAt = RULES.meta?.updatedAt ?? "(no updatedAt)";
+      const statusText = RULES.meta?.statusText ?? "Rules loaded";
+
+      if (statusEl) statusEl.textContent = statusText;
+      if (metaEl) metaEl.textContent = `Rules loaded ✓ version=${version} • updatedAt=${updatedAt}`;
+
+      // 룰 갱신 후 UI 상태 갱신
+      updateFtaStatus();
+      displayNews();
+
+      return true;
+    } catch (err) {
+      RULES = FALLBACK_RULES;
+      if (statusEl) statusEl.textContent = "Rule fetch failed (using fallback)";
+      if (metaEl) {
+        metaEl.textContent = "Rules: fetch failed ✗ using fallback rules";
+        metaEl.classList.add("error");
+      }
+      if (showAlertOnFailure) alert("Rules update failed: " + err.message);
+      return false;
+    }
+  }
+
+  // =========================
+  // DATA ACCESSORS (from RULES)
+  // =========================
+  function getFTACountry(code) {
+    return RULES?.ftaCountries?.[code] || null;
+  }
+
+  function getCountryLabel(code) {
+    return RULES?.countries?.[code] || code;
+  }
+
+  function getHsRule(hsCode10) {
+    return RULES?.hsCodeRules?.[hsCode10] || RULES?.hsCodeRules?.[hsCode10.substring(0,10)] || null;
+  }
+
+  function getMFNRate(hsCode) {
+    const k6 = hsCode.substring(0, 6);
+    const k4 = hsCode.substring(0, 4);
+    const r6 = RULES?.mfnRates?.[k6];
+    if (typeof r6 === "number") return r6;
+    const r4 = RULES?.mfnRates?.[k4];
+    if (typeof r4 === "number") return r4;
+    return 0.10;
+  }
+
+  function getReciprocalRate(countryCode) {
+    const r = RULES?.reciprocalRates?.[countryCode];
+    if (typeof r === "number") return r;
+    const d = RULES?.reciprocalRates?.DEFAULT;
+    if (typeof d === "number") return d;
+    return 0.10;
+  }
+
+  function getProductDescription(hsCode) {
+    const k4 = hsCode.substring(0, 4);
+    return RULES?.productDescriptions?.[k4] || `HS Code ${hsCode}`;
+  }
+
+  // =========================
+  // ORIGINAL LOGIC (adapted)
+  // =========================
+  let tariffChart = null; // (원래 코드에서 쓰면 유지)
+
+  function updateFtaStatus() {
+    const origin = document.getElementById('origin').value;
+    const ftaStatus = document.getElementById('ftaStatus');
+    const usmcaCheckbox = document.getElementById('usmcaCheckbox');
+
+    if (!origin) {
+      ftaStatus.textContent = '';
+      usmcaCheckbox.style.display = 'none';
+      return;
     }
 
-    function getMFNRate(hsCode) {
-      const k6 = hsCode.substring(0, 6);
-      const k4 = hsCode.substring(0, 4);
-      if (typeof RULES.mfnRates[k6] === "number") return RULES.mfnRates[k6];
-      if (typeof RULES.mfnRates[k4] === "number") return RULES.mfnRates[k4];
-      return 0.10;
-    }
+    const ftaInfo = getFTACountry(origin);
 
-    function calculateTariff(hsCode, origin, usmcaCompliant) {
-      const ftaInfo = RULES.ftaCountries[origin] || null;
-      const mfn = getMFNRate(hsCode);
-
-      let total = 0;
-      let notes = [];
-
-      if (ftaInfo) {
-        if (ftaInfo.type === "conditional") {
-          if (usmcaCompliant) {
-            total = 0;
-            notes.push(`${ftaInfo.fta}: duty-free (compliant)`);
-          } else {
-            total = mfn + (RULES.reciprocalRates?.DEFAULT ?? 0.10);
-            notes.push(`${ftaInfo.fta}: NOT compliant → MFN + reciprocal`);
-          }
-        } else if (ftaInfo.type === "minimum") {
-          total = Math.max(mfn, ftaInfo.minRate);
-          notes.push(`${ftaInfo.fta}: minimum rate applies`);
-        } else {
-          total = 0;
-          notes.push(`${ftaInfo.fta}: duty-free`);
-        }
+    if (ftaInfo) {
+      if (ftaInfo.type === 'conditional') {
+        ftaStatus.textContent = `✓ ${ftaInfo.fta} - ${ftaInfo.description}`;
+        ftaStatus.style.color = '#059669';
+        usmcaCheckbox.style.display = 'block';
+      } else if (ftaInfo.type === 'minimum') {
+        ftaStatus.textContent = `⚠️ ${ftaInfo.fta} - ${ftaInfo.description}`;
+        ftaStatus.style.color = '#d97706';
+        usmcaCheckbox.style.display = 'none';
       } else {
-        total = mfn + (RULES.reciprocalRates?.[origin] ?? RULES.reciprocalRates?.DEFAULT ?? 0.10);
-        notes.push("No FTA: MFN + reciprocal");
+        ftaStatus.textContent = `✓ ${ftaInfo.fta} - ${ftaInfo.description}`;
+        ftaStatus.style.color = '#059669';
+        usmcaCheckbox.style.display = 'none';
       }
+    } else {
+      ftaStatus.textContent = '❌ No FTA - Full tariffs apply';
+      ftaStatus.style.color = '#dc2626';
+      usmcaCheckbox.style.display = 'none';
+    }
+  }
 
-      return { total, notes };
+  async function lookupTariff() {
+    const origin = document.getElementById('origin').value;
+    const hsCode = document.getElementById('hsCode').value.replace(/[.\s]/g, '');
+    const usmcaCompliant = document.getElementById('usmcaCompliant')?.checked || false;
+
+    if (!origin || !hsCode || hsCode.length < 6) {
+      alert('Please select country and enter valid HS Code (min 6 digits).');
+      return;
     }
 
-    async function lookupTariff() {
-      const origin = document.getElementById("origin").value;
-      const hsCode = document.getElementById("hsCode").value.trim();
-      const usmcaCompliant = document.getElementById("usmcaCompliant").checked;
+    document.getElementById('loading').classList.add('show');
+    document.getElementById('results').classList.remove('show');
 
-      const out = document.getElementById("output");
-      out.style.display = "block";
+    await new Promise(resolve => setTimeout(resolve, 600));
 
-      if (!RULES) {
-        out.className = "result error";
-        out.innerHTML = "Rules not loaded yet. Click 'Update rules now' or refresh page.";
-        return;
+    const tariffData = calculateAccurateTariff(hsCode, origin, usmcaCompliant);
+    displayResults(tariffData);
+    displayNews();
+
+    document.getElementById('loading').classList.remove('show');
+    document.getElementById('results').classList.add('show');
+  }
+
+  function calculateAccurateTariff(hsCode, countryCode, usmcaCompliant = false) {
+    const hsCode10 = hsCode.padEnd(10, '0');
+    const hsRule = getHsRule(hsCode10);
+    const ftaInfo = getFTACountry(countryCode);
+
+    let tariffItems = [];
+    let totalRate = 0;
+    let warnings = [];
+    let exemptions = [];
+    let ftaStatusText = 'No FTA';
+
+    const description = hsRule?.description || getProductDescription(hsCode);
+    const mfnRate = getMFNRate(hsCode);
+
+    if (ftaInfo) {
+      ftaStatusText = ftaInfo.fta;
+
+      // CASE 1: Conditional (USMCA)
+      if (ftaInfo.type === 'conditional') {
+        if (usmcaCompliant) {
+          tariffItems.push({
+            name: `${ftaInfo.fta} - Duty Free`,
+            rate: 0,
+            tag: 'fta',
+            description: 'Certificate of Origin: Rules of Origin met',
+            source: ftaInfo.fta
+          });
+          exemptions.push(`✅ ${ftaInfo.fta}: Waived with valid Certificate of Origin`);
+        } else {
+          tariffItems.push({
+            name: 'MFN Base Tariff',
+            rate: mfnRate,
+            tag: 'mfn',
+            description: `Origin rules NOT met`,
+            source: 'Rules (mfnRates)'
+          });
+          totalRate += mfnRate;
+
+          const recip = getReciprocalRate(countryCode);
+          tariffItems.push({
+            name: 'Reciprocal Tariff (Non-compliant)',
+            rate: recip,
+            tag: 'ieepa',
+            description: 'Applied because conditional FTA not satisfied',
+            source: 'Rules (reciprocalRates)'
+          });
+          totalRate += recip;
+
+          warnings.push(`⚠️ Certificate of Origin required for 0% rate. Check the compliant box if you have it.`);
+        }
       }
 
-      if (!origin || hsCode.length < 6) {
-        out.className = "result error";
-        out.innerHTML = "Please select origin and enter HS code (min 6 digits).";
-        return;
+      // CASE 2: Minimum (KORUS-like)
+      else if (ftaInfo.type === 'minimum') {
+        const baseFtaRate = 0;
+        const calculatedRate = Math.max(baseFtaRate, mfnRate, ftaInfo.minRate);
+
+        tariffItems.push({
+          name: `${ftaInfo.fta} Minimum Rate`,
+          rate: calculatedRate,
+          tag: 'ieepa',
+          description: `MAX(FTA 0%, MFN ${(mfnRate*100).toFixed(1)}%, Min ${(ftaInfo.minRate*100).toFixed(1)}%) = ${(calculatedRate*100).toFixed(1)}%`,
+          source: 'Rules (ftaCountries)'
+        });
+        totalRate += calculatedRate;
+
+        warnings.push(`⚠️ Minimum rate rule applies for this FTA per rule set.`);
       }
 
-      const r = calculateTariff(hsCode, origin, usmcaCompliant);
-      out.className = "result ok";
-      out.innerHTML = `
-        <b>Total tariff:</b> ${(r.total * 100).toFixed(1)}%<br>
-        <b>Notes:</b> ${r.notes.join(" / ")}
+      // CASE 3: Standard (0%)
+      else {
+        tariffItems.push({
+          name: `${ftaInfo.fta} - Duty Free`,
+          rate: 0,
+          tag: 'fta',
+          description: ftaInfo.description,
+          source: ftaInfo.fta
+        });
+        exemptions.push(`✅ ${ftaInfo.fta}: 0% duty-free treatment`);
+      }
+    } else {
+      // NO FTA
+      tariffItems.push({
+        name: 'MFN Base Tariff (Column 1)',
+        rate: mfnRate,
+        tag: 'mfn',
+        description: `From rules: ${(mfnRate * 100).toFixed(1)}%`,
+        source: 'Rules (mfnRates)'
+      });
+      totalRate += mfnRate;
+
+      const recip = getReciprocalRate(countryCode);
+      tariffItems.push({
+        name: 'Reciprocal Tariff',
+        rate: recip,
+        tag: 'ieepa',
+        description: 'Country-specific rate from rules',
+        source: 'Rules (reciprocalRates)'
+      });
+      totalRate += recip;
+
+      // hsRule 기반 추가 경고(원하면 rules.json에 더 확장 가능)
+      if (countryCode === 'CN' && hsRule?.isAutoPartViaSection232) {
+        warnings.push("⚠️ This HS rule indicates auto-part classification may trigger additional measures. Add detailed measures in rules.json if needed.");
+      }
+    }
+
+    return { hsCode10, description, countryCode, ftaStatusText, tariffItems, totalRate, warnings, exemptions };
+  }
+
+  function displayResults(data) {
+    document.getElementById('displayHsCode').textContent = formatHsCode(data.hsCode10);
+    document.getElementById('productCategory').textContent = data.description;
+    document.getElementById('displayOrigin').textContent = getCountryLabel(data.countryCode);
+    document.getElementById('ftaStatusResult').textContent = data.ftaStatusText;
+
+    const totalBadge = document.getElementById('totalRate');
+    totalBadge.textContent = (data.totalRate * 100).toFixed(1) + '%';
+    if (data.totalRate === 0) totalBadge.classList.add('zero');
+    else totalBadge.classList.remove('zero');
+
+    let itemsHTML = '';
+    data.tariffItems.forEach(item => {
+      const tagHTML = item.tag ? `<span class="tag ${item.tag}">${item.tag.toUpperCase()}</span>` : '';
+      const isFree = item.rate === 0 ? ' free' : '';
+      const rateClass = item.rate === 0 ? ' zero' : '';
+      itemsHTML += `
+        <div class="tariff-item${isFree}">
+          <div class="tariff-header">
+            <div class="tariff-name">${item.name} ${tagHTML}</div>
+            <div class="tariff-rate${rateClass}">${(item.rate * 100).toFixed(1)}%</div>
+          </div>
+          <div class="tariff-description">
+            ${item.description}<br>
+            <small style="color: #64748b; font-size: 12px;">Source: ${item.source}</small>
+          </div>
+        </div>
       `;
-    }
-
-    window.addEventListener("load", async () => {
-      await refreshRules(false);
-      setInterval(() => refreshRules(false), AUTO_REFRESH_MS);
     });
-  </script>
+    document.getElementById('tariffItems').innerHTML = itemsHTML;
+
+    document.getElementById('exemptionContainer').innerHTML = data.exemptions.length ? `
+      <div class="exemption-box">
+        <div class="exemption-title">✅ Exemptions Applied</div>
+        <div style="font-size: 14px; color: #047857; line-height: 1.6;">
+          ${data.exemptions.join('<br>')}
+        </div>
+      </div>` : '';
+
+    document.getElementById('warningContainer').innerHTML = data.warnings.length ? `
+      <div class="warning-box">
+        <div class="warning-title">⚠️ Important Notes</div>
+        <div style="font-size: 14px; color: #78350f; line-height: 1.6;">
+          ${data.warnings.join('<br>')}
+        </div>
+      </div>` : '';
+  }
+
+  function displayNews() {
+    const el = document.getElementById('newsContent');
+    if (!el) return;
+
+    const version = RULES?.meta?.rulesVersion ?? "(no version)";
+    const updatedAt = RULES?.meta?.updatedAt ?? "(no updatedAt)";
+    const items = RULES?.news || [
+      { date: updatedAt, headline: "Rules loaded", body: `Using version ${version}` }
+    ];
+
+    el.innerHTML = items.map((n, i) => `
+      <div class="news-item ${i === 0 ? 'urgent' : ''}">
+        <div class="news-date">${n.date || ''}</div>
+        <div class="news-headline">${n.headline || ''}</div>
+        <div style="font-size: 13px; color: #475569; line-height: 1.5; margin-top: 5px;">
+          ${n.body || ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function formatHsCode(code) {
+    if (code.length === 10) return code.substring(0, 4) + '.' + code.substring(4, 6) + '.' + code.substring(6, 10);
+    if (code.length >= 6) return code.substring(0, 4) + '.' + code.substring(4, 6);
+    return code;
+  }
+
+  // =========================
+  // INIT
+  // =========================
+  document.addEventListener('DOMContentLoaded', async () => {
+    // (선택) 상단 상태 텍스트를 보여주려면, HTML에서 아래 id들을 넣어야 함:
+    // - apiStatusText (상단 상태 문구)
+    // - rulesMeta (버전/업데이트시각 표시)
+    // 원래 UI에 없으면 없어도 동작은 함.
+
+    await refreshRules(false);
+
+    // 로드 시 1회 fetch + 1시간마다 갱신
+    setInterval(() => refreshRules(false), AUTO_REFRESH_MS);
+
+    // Enter 키로 조회
+    const hs = document.getElementById('hsCode');
+    if (hs) hs.addEventListener('keypress', e => { if (e.key === 'Enter') lookupTariff(); });
+
+    displayNews();
+    updateFtaStatus();
+  });
+
+  // 업데이트 버튼을 원래 UI에 달고 싶으면,
+  // 버튼 onclick="refreshRules(true)" 로 연결하면 됨.
+</script>
+
 </body>
 </html>
+
