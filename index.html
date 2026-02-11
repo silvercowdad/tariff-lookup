@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>US Tariff Lookup - Reed Smith Aligned</title>
 <style>
-/* 기존 스타일 유지 */
+/* 기본 디자인 */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -22,43 +22,15 @@ body {
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   padding: 40px;
 }
-h1 {
-  font-size: 2.2rem;
-  margin-bottom: 10px;
-  color: #667eea;
-  text-align: center;
-}
-.subtitle {
-  text-align: center;
-  color: #666;
-  margin-bottom: 30px;
-  font-size: 0.95rem;
-}
+h1 { font-size: 2.2rem; margin-bottom: 10px; color: #667eea; text-align: center; }
+.subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 0.95rem; }
 .status-bar {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
+  background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px;
+  padding: 12px 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;
 }
-.status-text {
-  color: #28a745;
-  font-weight: 500;
-}
+.status-text { color: #28a745; font-weight: 500; }
 .update-btn {
-  background: #667eea;
-  color: white;
-  border: none;
-  padding: 6px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.2s;
+  background: #667eea; color: white; border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
 }
 .form-group { margin-bottom: 20px; }
 label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
@@ -67,17 +39,27 @@ button[type="submit"] {
   width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 10px;
 }
+
+/* 결과창 디자인 */
 .result { margin-top: 30px; padding: 24px; background: #f8f9fa; border-radius: 12px; border-left: 4px solid #667eea; }
 .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #dee2e6; }
-.total-rate { font-size: 2.4rem; font-weight: 800; color: #667eea; }
-.tariff-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; margin-bottom: 8px; background: white; border-radius: 8px; border-left: 3px solid #dee2e6; }
+.total-rate { font-size: 2.8rem; font-weight: 800; color: #667eea; }
+.tariff-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; margin-bottom: 8px; background: white; border-radius: 8px; border-left: 4px solid #dee2e6; }
+
+/* ✅ 태그별 색상 추가 (중요!) */
 .tariff-item.mfn { border-left-color: #28a745; }
 .tariff-item.section232 { border-left-color: #fd7e14; }
-.tariff-item.adjustment { border-left-color: #6f42c1; }
-.tariff-tag { font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; font-weight: 600; margin-left: 12px; }
+.tariff-item.section301 { border-left-color: #dc3545; } /* 중국 관세 빨간색 */
+.tariff-item.ieepa { border-left-color: #6f42c1; }      /* IEEPA 보라색 */
+.tariff-item.adjustment { border-left-color: #17a2b8; }
+
+.tariff-tag { font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; font-weight: 600; margin-left: 12px; text-transform: uppercase; }
 .tariff-tag.mfn { background: #d4edda; color: #155724; }
 .tariff-tag.section232 { background: #fff3cd; color: #856404; }
-.tariff-tag.adjustment { background: #e2d9f3; color: #4a148c; }
+.tariff-tag.section301 { background: #f8d7da; color: #721c24; }
+.tariff-tag.ieepa { background: #e2d9f3; color: #4a148c; }
+.tariff-tag.adjustment { background: #d1ecf1; color: #0c5460; }
+
 .meta-info { margin-top: 20px; padding-top: 16px; border-top: 1px solid #dee2e6; font-size: 0.85rem; color: #666; }
 .meta-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
 .exemptions { background: #d4edda; border-left: 4px solid #28a745; padding: 16px; border-radius: 8px; margin-top: 20px; font-size: 0.9rem; }
@@ -86,7 +68,7 @@ button[type="submit"] {
 <body>
 <div class="container">
   <h1>🇺🇸 US Tariff Lookup</h1>
-  <p class="subtitle">Reed Smith Aligned - 15% Cap Implementation</p>
+  <p class="subtitle">Reed Smith Aligned - 15% Cap & Smart Penalty</p>
 
   <div class="status-bar">
     <span class="status-text" id="statusText">⏳ Loading rules...</span>
@@ -170,32 +152,25 @@ function calculate(hsInput, country, usmcaCompliant) {
   let exemptions = [];
   let total = 0;
 
-  // ✅ 핵심: 한국/일본 15% 상한제 (Target 15 Logic)
+  // 1. 한국/일본 15% 상한제
   if (ftaInfo?.type === 'target_15') {
-    total = 0.15; // 상한선 15% 고정
-    items.push({ name: ftaInfo.fta + ' Base Rate', rate: mfnRate, tag: 'mfn' });
-    
-    const adjustment = 0.15 - mfnRate;
-    if (adjustment > 0) {
-      items.push({ name: 'Trade Agreement Adjustment', rate: adjustment, tag: 'adjustment' });
-    }
-    exemptions.push(`✅ Reed Smith Tracker: Total rate capped at 15.0% for ${country}.`);
+    total = 0.15;
+    items.push({ name: 'MFN Base Rate', rate: mfnRate, tag: 'mfn' });
+    items.push({ name: 'Trade Agreement Adjustment', rate: 0.15 - mfnRate, tag: 'adjustment' });
+    exemptions.push(`✅ Reed Smith Tracker: Capped at 15.0% for ${country}.`);
   } 
-  // 일반 국가 계산 (기존 로직 보강)
+  // 2. 중국 및 기타 국가 (누적 합산)
   else {
     total = mfnRate;
     items.push({ name: 'MFN Base Tariff', rate: mfnRate, tag: 'mfn' });
 
-    // USMCA 특수 처리
     if (ftaInfo?.type === 'conditional' && usmcaCompliant) {
         total = 0; items = [{ name: ftaInfo.fta + ' Duty Free', rate: 0, tag: 'fta' }];
     } else {
-        // 추가 관세(Measures) 계산
         for (const m of (RULES.measures || [])) {
             if (m.kind === 'additive' && applies(m, country, flags)) {
-                const r = (m.rateSource === 'reciprocal') ? (RULES.reciprocalRates[country] || 0.1) : (m.rate || 0);
-                total += r;
-                items.push({ name: m.name, rate: r, tag: m.tag });
+                total += m.rate;
+                items.push({ name: m.name, rate: m.rate, tag: m.tag });
             }
         }
     }
@@ -206,8 +181,8 @@ function calculate(hsInput, country, usmcaCompliant) {
 
 function applies(m, country, flags) {
   const w = m.appliesWhen || {};
-  if (w.notCountries?.includes(country)) return false; // ✅ 상한제 국가 제외 로직
   if (w.countries && !w.countries.includes(country)) return false;
+  if (w.notCountries && w.notCountries.includes(country)) return false;
   if (w.flagsAll) { for (const f of w.flagsAll) if (!flags[f]) return false; }
   return true;
 }
