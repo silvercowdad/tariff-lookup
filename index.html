@@ -262,7 +262,7 @@ async function fetchRules() {
   status.textContent = '⏳ Fetching...';
   
   try {
-    const res = await fetch(WORKER);
+    const res = await fetch(WORKER, { cache: "no-store" });
     const data = await res.json();
     
     if (data.status === 'EMPTY') {
@@ -462,3 +462,4 @@ setInterval(fetchRules, 3600000);
 </script>
 </body>
 </html>
+
