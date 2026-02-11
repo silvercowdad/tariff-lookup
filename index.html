@@ -30,10 +30,7 @@ button[type="submit"] { width: 100%; padding: 16px; background: linear-gradient(
 <div class="container">
   <h1>🇺🇸 US Tariff Lookup</h1>
   <p class="subtitle">EO 14289 Stacking Hierarchy Aligned</p>
-
-  <div class="status-bar">
-    <span class="status-text" id="statusText">⏳ Loading Rules...</span>
-  </div>
+  <div class="status-bar"><span class="status-text" id="statusText">⏳ 로딩 중...</span></div>
 
   <form id="tariffForm">
     <div class="form-group">
@@ -46,18 +43,15 @@ button[type="submit"] { width: 100%; padding: 16px; background: linear-gradient(
     </div>
     <div class="form-group">
       <label>Country of Origin</label>
-      <select id="country" required>
-        <option value="">-- Select Country --</option>
-      </select>
+      <select id="country" required><option value="">-- 국가 선택 --</option></select>
     </div>
-    <button type="submit">Calculate & Compare</button>
+    <button type="submit">실시간 관세 계산</button>
   </form>
-
   <div id="resultArea" class="result-grid"></div>
 </div>
 
 <script>
-// 워커 주소를 본인의 주소로 꼭 바꾸세요!
+// ⚠️ 중요: 이 주소를 사용자님의 실제 워커 주소로 바꾸세요!
 const WORKER_URL = 'https://tariff-rules-live.sys1107.workers.dev/rules';
 let RULES = null;
 const targetCountries = ["CA", "MX", "KR", "CN", "MY", "VN"];
@@ -66,11 +60,12 @@ async function fetchRules() {
   const status = document.getElementById('statusText');
   try {
     const res = await fetch(WORKER_URL);
+    if (!res.ok) throw new Error('Network Error');
     RULES = await res.json();
-    status.textContent = RULES.meta.statusText;
+    status.textContent = RULES.meta?.statusText || '✅ 연결됨';
     
     const select = document.getElementById('country');
-    select.innerHTML = '<option value="">-- Select Country --</option>';
+    select.innerHTML = '<option value="">-- 국가 선택 --</option>';
     targetCountries.forEach(code => {
       if (RULES.countries[code]) {
         const opt = document.createElement('option');
@@ -78,23 +73,25 @@ async function fetchRules() {
         select.appendChild(opt);
       }
     });
-  } catch (err) { status.textContent = '❌ Connection Failed'; }
+  } catch (err) { status.textContent = '❌ 워커 연결 실패'; console.error(err); }
 }
 
 document.getElementById('tariffForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  if (!RULES) return;
+  if (!RULES) { alert('데이터를 불러오는 중입니다.'); return; }
+  
   const hs = document.getElementById('hsCode').value;
   const country = document.getElementById('country').value;
   const area = document.getElementById('resultArea');
   
+  // 멕시코/캐나다일 때만 비교 모드 작동
   if (['MX', 'CA'].includes(country)) {
     area.className = "result-grid dual";
     area.innerHTML = renderBox(calculate(hs, country, false), "Standard (Non-USMCA)") + 
                      renderBox(calculate(hs, country, true), "USMCA Compliant", true);
   } else {
     area.className = "result-grid";
-    area.innerHTML = renderBox(calculate(hs, country, false), "Final Analysis");
+    area.innerHTML = renderBox(calculate(hs, country, false), "최종 분석 결과");
   }
 });
 
@@ -104,51 +101,55 @@ function calculate(hs, country, compliant) {
   let items = [{ n: 'MFN Base', r: mfn }];
   let total = mfn;
 
-  // 1. Semiconductor Override
+  // 1. 반도체 우선순위
   if (hs === 'semiconductor') {
     return { total: 0.25, items: [{ n: 'S232 Semiconductor', r: 0.25, t: 'OVERRIDE' }] };
   }
 
-  // 2. Auto Parts (EV Battery) Hierarchy
-  if (rule.flags.includes('isAutoPart')) {
+  // 2. 자동차 부품 (EV 배터리)
+  if (rule.flags && rule.flags.includes('isAutoPart')) {
     if (country === 'KR') return { total: 0.15, items: [{ n: 'KORUS Auto Cap', r: 0.15, t: 'EXCLUSIVE' }] };
-    if (compliant) return { total: 0, items: [{ n: 'USMCA Free', r: 0, t: 'FTA' }] };
+    if (compliant) return { total: 0, items: [{ n: 'USMCA Preference', r: 0, t: 'FTA' }] };
 
     total = mfn + 0.25;
     items.push({ n: 'S232 Auto Parts', r: 0.25, t: 'SUPERSIDE' });
-    if (country === 'CN') { total += 0.25; items.push({ n: 'Section 301', r: 0.25 }); }
+    if (country === 'CN') { total += 0.25; items.push({ n: 'Section 301 China', r: 0.25 }); }
     return { total, items };
   }
 
-  // 3. Proportional Content Logic
+  // 3. 금속 비례 적용 (ESS 등)
   const metalRatio = rule.metalContent || 0;
   const metalDuty = 0.50 * metalRatio;
   total += metalDuty;
   items.push({ n: `S232 Metal (${(metalRatio*100).toFixed(0)}%)`, r: metalDuty, t: 'CONTENT' });
 
   if (!compliant) {
-    const recip = (RULES.reciprocalRates[country] || 0.1) * (1 - metalRatio);
+    const nonMetalRatio = 1 - metalRatio;
+    const recip = (RULES.reciprocalRates[country] || RULES.reciprocalRates["DEFAULT"] || 0.1) * nonMetalRatio;
     total += recip;
-    items.push({ n: 'Reciprocal (Non-metal)', r: recip, t: 'PROPORTIONAL' });
+    items.push({ n: 'Reciprocal Tariff', r: recip, t: 'NON-METAL' });
     
-    if (RULES.fentanylRates[country]) {
-        const fen = RULES.fentanylRates[country] * (1 - metalRatio);
-        total += fen;
-        items.push({ n: 'IEEPA (Fentanyl)', r: fen });
+    if (RULES.fentanylRates && RULES.fentanylRates[country]) {
+      const fen = RULES.fentanylRates[country] * nonMetalRatio;
+      total += fen;
+      items.push({ n: 'IEEPA (Fentanyl)', r: fen });
     }
   }
   return { total, items };
 }
 
-function renderBox(r, title, isComp = false) {
+function renderBox(res, title, isComp = false) {
+  const itemsHtml = res.items.map(i => `
+    <div class="tariff-item">
+      <span>${i.n} ${i.t ? `<span class="tag">${i.t}</span>` : ''}</span>
+      <strong>${(i.r * 100).toFixed(1)}%</strong>
+    </div>`).join('');
+    
   return `
     <div class="result-box ${isComp ? 'compliant' : ''}">
-      <div style="font-size:0.7rem; font-weight:bold; color:#666; margin-bottom:10px;">${title}</div>
-      <div class="total-rate">${(r.total*100).toFixed(1)}%</div>
-      ${r.items.map(i => `<div class="tariff-item">
-        <span>${i.n} ${i.t ? `<span class="tag">${i.t}</span>` : ''}</span>
-        <strong>${(i.rate || i.r * 100).toFixed(1)}%</strong>
-      </div>`).join('')}
+      <div style="font-size:0.75rem; font-weight:bold; color:#666; margin-bottom:10px; text-transform:uppercase;">${title}</div>
+      <div class="total-rate">${(res.total * 100).toFixed(1)}%</div>
+      <div class="breakdown">${itemsHtml}</div>
     </div>`;
 }
 
