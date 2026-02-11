@@ -1,159 +1,85 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>US Tariff Lookup - Hierarchy Mode</title>
-<style>
-/* 디자인 유지 */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; color: #333; }
-.container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 40px; }
-h1 { font-size: 2.2rem; margin-bottom: 10px; color: #667eea; text-align: center; }
-.subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 0.95rem; }
-.status-bar { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
-.status-text { color: #28a745; font-weight: 500; }
-.form-group { margin-bottom: 20px; }
-label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
-select { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; background: #fff; }
-button[type="submit"] { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 10px; }
-.result-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 30px; }
-.result-grid.dual { grid-template-columns: 1fr 1fr; }
-.result-box { padding: 20px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #667eea; }
-.result-box.compliant { border-top-color: #28a745; background: #f0fff4; }
-.total-rate { font-size: 2.5rem; font-weight: 800; color: #333; margin-bottom: 10px; }
-.tariff-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 8px 0; border-bottom: 1px solid #eee; }
-.tag { font-size: 0.65rem; padding: 2px 6px; background: #eef2ff; color: #4f46e5; border-radius: 4px; font-weight: bold; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Tariff Lookup 2.0</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); min-height: 100vh; padding: 40px; color: #333; }
+        .card { background: white; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        h1 { color: #1e3a8a; text-align: center; margin-bottom: 5px; }
+        .status { text-align: center; font-size: 0.8rem; color: #10b981; margin-bottom: 30px; }
+        .group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; }
+        select, button { width: 100%; padding: 14px; border-radius: 8px; border: 2px solid #e2e8f0; font-size: 1rem; }
+        button { background: #1e3a8a; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        button:hover { background: #1e40af; }
+        .result-area { margin-top: 30px; display: grid; gap: 15px; }
+        .result-area.dual { grid-template-columns: 1fr 1fr; }
+        .box { padding: 20px; background: #f8fafc; border-radius: 12px; border-left: 6px solid #1e3a8a; }
+        .box.green { border-left-color: #10b981; background: #f0fdf4; }
+        .rate-val { font-size: 2.5rem; font-weight: 800; color: #1e293b; margin: 5px 0; }
+        .detail { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 4px 0; border-bottom: 1px solid #e2e8f0; }
+    </style>
 </head>
 <body>
-<div class="container">
-  <h1>🇺🇸 US Tariff Lookup</h1>
-  <p class="subtitle">EO 14289 Stacking Hierarchy Aligned</p>
-  <div class="status-bar"><span class="status-text" id="statusText">⏳ 로딩 중...</span></div>
+<div class="card">
+    <h1>🇺🇸 Tariff Hierarchy</h1>
+    <div class="status" id="statusText">CBP API Connected</div>
 
-  <form id="tariffForm">
-    <div class="form-group">
-      <label>Target Product</label>
-      <select id="hsCode" required>
-        <option value="8507600010">EV Battery (Auto Part)</option>
-        <option value="8507600020">ESS Battery (Stationary)</option>
-        <option value="semiconductor">Advanced Computing Chip</option>
-      </select>
+    <div class="group">
+        <label>Product Application</label>
+        <select id="hsCode">
+            <option value="8507600010">EV Battery (Strategic)</option>
+            <option value="8507600020">ESS Battery (Stationary)</option>
+        </select>
     </div>
-    <div class="form-group">
-      <label>Country of Origin</label>
-      <select id="country" required><option value="">-- 국가 선택 --</option></select>
+    <div class="group">
+        <label>Country of Origin</label>
+        <select id="country">
+            <option value="CA">Canada (35% Recip.)</option>
+            <option value="MX">Mexico (25% Recip.)</option>
+            <option value="KR">South Korea (15% Flat)</option>
+            <option value="CN">China (Stacking)</option>
+            <option value="MY">Malaysia (19% Recip.)</option>
+            <option value="VN">Vietnam (20% Recip.)</option>
+        </select>
     </div>
-    <button type="submit">실시간 관세 계산</button>
-  </form>
-  <div id="resultArea" class="result-grid"></div>
+    <button onclick="calculate()">Analyze Tariff Breakdown</button>
+
+    <div id="resultArea" class="result-area"></div>
 </div>
 
 <script>
-// ⚠️ 중요: 이 주소를 사용자님의 실제 워커 주소로 바꾸세요!
-const WORKER_URL = 'https://tariff-rules-live.sys1107.workers.dev/rules';
-let RULES = null;
-const targetCountries = ["CA", "MX", "KR", "CN", "MY", "VN"];
+    const API = 'https://YOUR-WORKER-URL.workers.dev/calculate';
 
-async function fetchRules() {
-  const status = document.getElementById('statusText');
-  try {
-    const res = await fetch(WORKER_URL);
-    if (!res.ok) throw new Error('Network Error');
-    RULES = await res.json();
-    status.textContent = RULES.meta?.statusText || '✅ 연결됨';
-    
-    const select = document.getElementById('country');
-    select.innerHTML = '<option value="">-- 국가 선택 --</option>';
-    targetCountries.forEach(code => {
-      if (RULES.countries[code]) {
-        const opt = document.createElement('option');
-        opt.value = code; opt.textContent = RULES.countries[code];
-        select.appendChild(opt);
-      }
-    });
-  } catch (err) { status.textContent = '❌ 워커 연결 실패'; console.error(err); }
-}
+    async function calculate() {
+        const hs = document.getElementById('hsCode').value;
+        const country = document.getElementById('country').value;
+        const area = document.getElementById('resultArea');
 
-document.getElementById('tariffForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  if (!RULES) { alert('데이터를 불러오는 중입니다.'); return; }
-  
-  const hs = document.getElementById('hsCode').value;
-  const country = document.getElementById('country').value;
-  const area = document.getElementById('resultArea');
-  
-  // 멕시코/캐나다일 때만 비교 모드 작동
-  if (['MX', 'CA'].includes(country)) {
-    area.className = "result-grid dual";
-    area.innerHTML = renderBox(calculate(hs, country, false), "Standard (Non-USMCA)") + 
-                     renderBox(calculate(hs, country, true), "USMCA Compliant", true);
-  } else {
-    area.className = "result-grid";
-    area.innerHTML = renderBox(calculate(hs, country, false), "최종 분석 결과");
-  }
-});
-
-function calculate(hs, country, compliant) {
-  const rule = RULES.hsCodeRules[hs];
-  const mfn = 0.034;
-  let items = [{ n: 'MFN Base', r: mfn }];
-  let total = mfn;
-
-  // 1. 반도체 우선순위
-  if (hs === 'semiconductor') {
-    return { total: 0.25, items: [{ n: 'S232 Semiconductor', r: 0.25, t: 'OVERRIDE' }] };
-  }
-
-  // 2. 자동차 부품 (EV 배터리)
-  if (rule.flags && rule.flags.includes('isAutoPart')) {
-    if (country === 'KR') return { total: 0.15, items: [{ n: 'KORUS Auto Cap', r: 0.15, t: 'EXCLUSIVE' }] };
-    if (compliant) return { total: 0, items: [{ n: 'USMCA Preference', r: 0, t: 'FTA' }] };
-
-    total = mfn + 0.25;
-    items.push({ n: 'S232 Auto Parts', r: 0.25, t: 'SUPERSIDE' });
-    if (country === 'CN') { total += 0.25; items.push({ n: 'Section 301 China', r: 0.25 }); }
-    return { total, items };
-  }
-
-  // 3. 금속 비례 적용 (ESS 등)
-  const metalRatio = rule.metalContent || 0;
-  const metalDuty = 0.50 * metalRatio;
-  total += metalDuty;
-  items.push({ n: `S232 Metal (${(metalRatio*100).toFixed(0)}%)`, r: metalDuty, t: 'CONTENT' });
-
-  if (!compliant) {
-    const nonMetalRatio = 1 - metalRatio;
-    const recip = (RULES.reciprocalRates[country] || RULES.reciprocalRates["DEFAULT"] || 0.1) * nonMetalRatio;
-    total += recip;
-    items.push({ n: 'Reciprocal Tariff', r: recip, t: 'NON-METAL' });
-    
-    if (RULES.fentanylRates && RULES.fentanylRates[country]) {
-      const fen = RULES.fentanylRates[country] * nonMetalRatio;
-      total += fen;
-      items.push({ n: 'IEEPA (Fentanyl)', r: fen });
+        if (['CA', 'MX'].includes(country)) {
+            area.className = "result-area dual";
+            const [std, cpt] = await Promise.all([
+                fetch(`${API}?hs=${hs}&country=${country}&compliant=false`).then(r => r.json()),
+                fetch(`${API}?hs=${hs}&country=${country}&compliant=true`).then(r => r.json())
+            ]);
+            area.innerHTML = render(std, "Non-USMCA") + render(cpt, "USMCA Compliant", true);
+        } else {
+            area.className = "result-area";
+            const res = await fetch(`${API}?hs=${hs}&country=${country}`).then(r => r.json());
+            area.innerHTML = render(res, "Final Analysis");
+        }
     }
-  }
-  return { total, items };
-}
 
-function renderBox(res, title, isComp = false) {
-  const itemsHtml = res.items.map(i => `
-    <div class="tariff-item">
-      <span>${i.n} ${i.t ? `<span class="tag">${i.t}</span>` : ''}</span>
-      <strong>${(i.r * 100).toFixed(1)}%</strong>
-    </div>`).join('');
-    
-  return `
-    <div class="result-box ${isComp ? 'compliant' : ''}">
-      <div style="font-size:0.75rem; font-weight:bold; color:#666; margin-bottom:10px; text-transform:uppercase;">${title}</div>
-      <div class="total-rate">${(res.total * 100).toFixed(1)}%</div>
-      <div class="breakdown">${itemsHtml}</div>
-    </div>`;
-}
-
-window.addEventListener('DOMContentLoaded', fetchRules);
+    function render(data, title, green = false) {
+        const lines = data.items.map(i => `<div class="detail"><span>${i.n}</span><strong>${(i.r*100).toFixed(1)}%</strong></div>`).join('');
+        return `<div class="box ${green ? 'green' : ''}">
+            <small style="text-transform:uppercase; font-weight:bold; color: #64748b;">${title}</small>
+            <div class="rate-val">${(data.total * 100).toFixed(1)}%</div>
+            <div>${lines}</div>
+        </div>`;
+    }
 </script>
 </body>
 </html>
