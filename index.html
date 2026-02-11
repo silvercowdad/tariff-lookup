@@ -51,24 +51,35 @@
 </div>
 
 <script>
-    const API = 'https://tariff-rules-live.sys1107.workers.dev';
+    // ⚠️ [필독] YOUR-WORKER-URL 부분을 사용자님의 실제 Cloudflare 워커 주소로 꼭 바꾸세요!
+    // 예시: const API = 'https://tariff-lookup.abc.workers.dev/calculate';
+    const API = 'https://YOUR-WORKER-URL.workers.dev/calculate';
 
     async function calculate() {
         const hs = document.getElementById('hsCode').value;
         const country = document.getElementById('country').value;
         const area = document.getElementById('resultArea');
+        const btn = document.querySelector('button');
 
-        if (['CA', 'MX'].includes(country)) {
-            area.className = "result-area dual";
-            const [std, cpt] = await Promise.all([
-                fetch(`${API}?hs=${hs}&country=${country}&compliant=false`).then(r => r.json()),
-                fetch(`${API}?hs=${hs}&country=${country}&compliant=true`).then(r => r.json())
-            ]);
-            area.innerHTML = render(std, "Non-USMCA") + render(cpt, "USMCA Compliant", true);
-        } else {
-            area.className = "result-area";
-            const res = await fetch(`${API}?hs=${hs}&country=${country}`).then(r => r.json());
-            area.innerHTML = render(res, "Final Analysis");
+        try {
+            btn.innerText = "Calculating...";
+            if (['CA', 'MX'].includes(country)) {
+                area.className = "result-area dual";
+                const [std, cpt] = await Promise.all([
+                    fetch(`${API}?hs=${hs}&country=${country}&compliant=false`).then(r => r.json()),
+                    fetch(`${API}?hs=${hs}&country=${country}&compliant=true`).then(r => r.json())
+                ]);
+                area.innerHTML = render(std, "Non-USMCA") + render(cpt, "USMCA Compliant", true);
+            } else {
+                area.className = "result-area";
+                const res = await fetch(`${API}?hs=${hs}&country=${country}`).then(r => r.json());
+                area.innerHTML = render(res, "Final Analysis");
+            }
+        } catch (err) {
+            alert("연결 실패! 워커 주소가 정확한지, 배포가 되었는지 확인하세요.");
+            console.error(err);
+        } finally {
+            btn.innerText = "Analyze Tariff Breakdown";
         }
     }
 
@@ -83,4 +94,3 @@
 </script>
 </body>
 </html>
-
