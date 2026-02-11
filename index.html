@@ -3,71 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>US Tariff Lookup - Reed Smith Aligned</title>
+<title>US Tariff Lookup - Comparison Mode</title>
 <style>
-/* 기본 디자인 */
+/* 기존 스타일 유지 + 비교창 스타일 추가 */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  padding: 20px;
-  color: #333;
-}
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  padding: 40px;
-}
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; color: #333; }
+.container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 40px; }
 h1 { font-size: 2.2rem; margin-bottom: 10px; color: #667eea; text-align: center; }
 .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 0.95rem; }
-.status-bar {
-  background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px;
-  padding: 12px 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;
-}
+.status-bar { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
 .status-text { color: #28a745; font-weight: 500; }
-.update-btn {
-  background: #667eea; color: white; border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
-}
+.update-btn { background: #667eea; color: white; border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
 .form-group { margin-bottom: 20px; }
 label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
 input, select { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; }
-button[type="submit"] {
-  width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 10px;
-}
+button[type="submit"] { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 10px; }
 
-/* 결과창 디자인 */
-.result { margin-top: 30px; padding: 24px; background: #f8f9fa; border-radius: 12px; border-left: 4px solid #667eea; }
-.result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #dee2e6; }
-.total-rate { font-size: 2.8rem; font-weight: 800; color: #667eea; }
-.tariff-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; margin-bottom: 8px; background: white; border-radius: 8px; border-left: 4px solid #dee2e6; }
-
-.tariff-item.mfn { border-left-color: #28a745; }
-.tariff-item.section232 { border-left-color: #fd7e14; }
-.tariff-item.section301 { border-left-color: #dc3545; }
-.tariff-item.ieepa { border-left-color: #6f42c1; }
-.tariff-item.adjustment { border-left-color: #17a2b8; }
-
-.tariff-tag { font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; font-weight: 600; margin-left: 12px; text-transform: uppercase; }
-.tariff-tag.mfn { background: #d4edda; color: #155724; }
-.tariff-tag.section232 { background: #fff3cd; color: #856404; }
-.tariff-tag.section301 { background: #f8d7da; color: #721c24; }
-.tariff-tag.ieepa { background: #e2d9f3; color: #4a148c; }
-.tariff-tag.adjustment { background: #d1ecf1; color: #0c5460; }
-
-.meta-info { margin-top: 20px; padding-top: 16px; border-top: 1px solid #dee2e6; font-size: 0.85rem; color: #666; }
-.meta-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
-.exemptions { background: #d4edda; border-left: 4px solid #28a745; padding: 16px; border-radius: 8px; margin-top: 20px; font-size: 0.9rem; }
+/* 결과창 및 비교 레이아웃 */
+.result-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 30px; }
+.result-grid.dual { grid-template-columns: 1fr 1fr; }
+.result-box { padding: 20px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #667eea; }
+.result-box.compliant { border-top-color: #28a745; background: #f0fff4; }
+.box-title { font-weight: 800; font-size: 0.9rem; margin-bottom: 15px; text-transform: uppercase; color: #555; }
+.total-rate { font-size: 2.5rem; font-weight: 800; color: #333; margin-bottom: 10px; }
+.tariff-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 8px 0; border-bottom: 1px solid #eee; }
+.tariff-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: #eee; font-weight: bold; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>🇺🇸 US Tariff Lookup</h1>
-  <p class="subtitle">Reed Smith Aligned - 15% Cap & Smart Penalty</p>
+  <p class="subtitle">Reed Smith Aligned - Comparison Mode</p>
 
   <div class="status-bar">
     <span class="status-text" id="statusText">⏳ Loading rules...</span>
@@ -90,16 +56,10 @@ button[type="submit"] {
         <option value="">-- Select Country --</option>
       </select>
     </div>
-
-    <div class="checkbox-group" id="usmcaGroup" style="display:none; margin-bottom:20px;">
-      <input type="checkbox" id="usmcaCompliant">
-      <label for="usmcaCompliant">USMCA Certificate of Origin (Rules of Origin met)</label>
-    </div>
-
-    <button type="submit">Calculate Tariff</button>
+    <button type="submit">Calculate & Compare</button>
   </form>
 
-  <div id="result" style="display:none;"></div>
+  <div id="resultArea" class="result-grid"></div>
 </div>
 
 <script>
@@ -125,57 +85,65 @@ async function fetchRules() {
       select.appendChild(opt);
     }
     select.value = currentVal;
-  } catch (err) {
-    status.textContent = '❌ Connection Failed';
-  }
+  } catch (err) { status.textContent = '❌ Connection Failed'; }
 }
 
 document.getElementById('tariffForm').addEventListener('submit', function(e) {
   e.preventDefault();
   if (!RULES) return;
-  const result = calculate(document.getElementById('hsCode').value, document.getElementById('country').value, document.getElementById('usmcaCompliant').checked);
-  display(result);
+  
+  const hs = document.getElementById('hsCode').value;
+  const country = document.getElementById('country').value;
+  const ftaInfo = RULES.ftaCountries?.[country];
+  const area = document.getElementById('resultArea');
+  
+  // 1. 일반 결과 (미충족 시)
+  const resNormal = calculate(hs, country, false);
+  
+  if (ftaInfo?.type === 'conditional') {
+    // 2. USMCA 결과 (충족 시)
+    const resUSMCA = calculate(hs, country, true);
+    area.className = "result-grid dual";
+    area.innerHTML = renderBox(resNormal, "Scenario A: Standard (Non-USMCA)") + 
+                     renderBox(resUSMCA, "Scenario B: USMCA Compliant", true);
+  } else {
+    area.className = "result-grid";
+    area.innerHTML = renderBox(resNormal, "Standard Result");
+  }
+  area.scrollIntoView({ behavior: 'smooth' });
 });
 
-function calculate(hsInput, country, usmcaCompliant) {
+function calculate(hsInput, country, compliant) {
   const flags = RULES.hsCodeRules?.[hsInput]?.flags || {};
   const ftaInfo = RULES.ftaCountries?.[country];
   const mfnRate = getMFN(hsInput);
-  
-  let items = [];
-  let exemptions = [];
-  let total = 0;
+  let items = [], total = 0;
 
   if (ftaInfo?.type === 'target_15') {
     total = 0.15;
-    items.push({ name: 'MFN Base Rate', rate: mfnRate, tag: 'mfn' });
-    items.push({ name: 'Trade Agreement Adjustment', rate: 0.15 - mfnRate, tag: 'adjustment' });
-    exemptions.push(`✅ Reed Smith Tracker: Capped at 15.0% for ${country}.`);
+    items.push({ name: 'MFN Base', rate: mfnRate, tag: 'mfn' });
+    items.push({ name: 'TA Adjustment', rate: 0.15 - mfnRate, tag: 'adj' });
+  } else if (ftaInfo?.type === 'conditional' && compliant) {
+    total = 0;
+    items.push({ name: ftaInfo.fta + ' Duty Free', rate: 0, tag: 'fta' });
   } else {
     total = mfnRate;
-    items.push({ name: 'MFN Base Tariff', rate: mfnRate, tag: 'mfn' });
-
-    if (ftaInfo?.type === 'conditional' && usmcaCompliant) {
-        total = 0; items = [{ name: ftaInfo.fta + ' Duty Free', rate: 0, tag: 'fta' }];
-    } else {
-        for (const m of (RULES.measures || [])) {
-            if (m.kind === 'additive' && applies(m, country, flags)) {
-                total += m.rate;
-                items.push({ name: m.name, rate: m.rate, tag: m.tag });
-            }
-        }
+    items.push({ name: 'MFN Base', rate: mfnRate, tag: 'mfn' });
+    for (const m of (RULES.measures || [])) {
+      if (m.kind === 'additive' && applies(m, country, flags)) {
+        total += m.rate;
+        items.push({ name: m.name, rate: m.rate, tag: m.tag });
+      }
     }
   }
-  return { hsInput, country, items, total, exemptions, desc: RULES.hsCodeRules?.[hsInput]?.description };
+  return { total, items };
 }
 
-// ✅ [핵심 수정] notFlags 조건을 처리할 수 있도록 업데이트됨
 function applies(m, country, flags) {
   const w = m.appliesWhen || {};
   if (w.countries && !w.countries.includes(country)) return false;
   if (w.notCountries && w.notCountries.includes(country)) return false;
   if (w.flagsAll) { for (const f of w.flagsAll) if (!flags[f]) return false; }
-  // ⬇️ 아래 로직이 추가되어 IEEPA 상호관세 중복을 방지합니다.
   if (w.notFlags) { for (const f of w.notFlags) if (flags[f]) return false; }
   return true;
 }
@@ -188,25 +156,19 @@ function getMFN(code) {
   return 0.034;
 }
 
-function display(r) {
-  const div = document.getElementById('result');
-  div.style.display = 'block';
-  let html = `<div class="result"><div class="result-header">
-      <div class="result-title">${r.desc}<br><small>HS ${r.hsInput} from ${r.country}</small></div>
-      <div class="total-rate">${(r.total*100).toFixed(1)}%</div></div><div class="tariff-breakdown">`;
-  
-  for (const i of r.items) {
-    html += `<div class="tariff-item ${i.tag}"><div class="tariff-name">✓ ${i.name}</div>
-      <div class="tariff-rate">${(i.rate*100).toFixed(1)}%</div><div class="tariff-tag ${i.tag}">${i.tag}</div></div>`;
-  }
-  
-  if (r.exemptions.length > 0) {
-    html += `<div class="exemptions">${r.exemptions.map(e => `<div>${e}</div>`).join('')}</div>`;
-  }
-
-  html += `<div class="meta-info"><div class="meta-row"><span><strong>Rules Version:</strong></span><span>${RULES.meta?.rulesVersion}</span></div></div></div>`;
-  div.innerHTML = html;
-  div.scrollIntoView({ behavior: 'smooth' });
+function renderBox(r, title, isCompliant = false) {
+  let itemsHtml = r.items.map(i => `
+    <div class="tariff-item">
+      <span>${i.name}</span>
+      <span><strong>${(i.rate*100).toFixed(1)}%</strong></span>
+    </div>`).join('');
+    
+  return `
+    <div class="result-box ${isCompliant ? 'compliant' : ''}">
+      <div class="box-title">${title}</div>
+      <div class="total-rate">${(r.total*100).toFixed(1)}%</div>
+      <div class="breakdown">${itemsHtml}</div>
+    </div>`;
 }
 
 window.addEventListener('DOMContentLoaded', fetchRules);
