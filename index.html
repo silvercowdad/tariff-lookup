@@ -1,26 +1,464 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Test</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US Tariff Lookup - FTA & Live Rules</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  padding: 40px;
+}
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  color: #667eea;
+  text-align: center;
+}
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+.status-bar {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+.status-text {
+  color: #28a745;
+  font-weight: 500;
+}
+.update-btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.update-btn:hover {
+  background: #5568d3;
+  transform: translateY(-1px);
+}
+.form-group {
+  margin-bottom: 20px;
+}
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #444;
+}
+input, select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+.checkbox-group label {
+  margin: 0;
+  font-weight: 500;
+}
+button[type="submit"] {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+.result {
+  margin-top: 30px;
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+}
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #dee2e6;
+}
+.result-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+}
+.total-rate {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #667eea;
+}
+.tariff-breakdown {
+  margin-top: 20px;
+}
+.tariff-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: white;
+  border-radius: 8px;
+  border-left: 3px solid #dee2e6;
+}
+.tariff-item.mfn { border-left-color: #28a745; }
+.tariff-item.fta { border-left-color: #17a2b8; }
+.tariff-item.section232 { border-left-color: #fd7e14; }
+.tariff-item.section301 { border-left-color: #dc3545; }
+.tariff-item.ieepa { border-left-color: #6f42c1; }
+.tariff-name {
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+}
+.tariff-rate {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-left: 16px;
+}
+.tariff-tag {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-left: 12px;
+}
+.tariff-tag.mfn { background: #d4edda; color: #155724; }
+.tariff-tag.fta { background: #d1ecf1; color: #0c5460; }
+.tariff-tag.section232 { background: #fff3cd; color: #856404; }
+.tariff-tag.section301 { background: #f8d7da; color: #721c24; }
+.tariff-tag.ieepa { background: #e2d9f3; color: #4a148c; }
+.tariff-description {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+}
+.warnings, .exemptions {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 8px;
+}
+.warnings {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+.exemptions {
+  background: #d4edda;
+  border-left: 4px solid #28a745;
+}
+.warning-item, .exemption-item {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.meta-info {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #dee2e6;
+  font-size: 0.85rem;
+  color: #666;
+}
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+</style>
 </head>
 <body>
-  <h1>Loading...</h1>
-  <div id="output"></div>
+<div class="container">
+  <h1>🇺🇸 US Tariff Lookup</h1>
+  <p class="subtitle">FTA-aware calculator with live rules from Cloudflare Workers</p>
+
+  <div class="status-bar">
+    <span class="status-text" id="statusText">⏳ Loading rules...</span>
+    <button class="update-btn" onclick="fetchRules()">⬇️ Update</button>
+  </div>
+
+  <form id="tariffForm">
+    <div class="form-group">
+      <label for="hsCode">HS Code (6, 8, or 10 digits)</label>
+      <input type="text" id="hsCode" placeholder="e.g., 8507.60.00.10 or 8507600010" required>
+    </div>
+
+    <div class="form-group">
+      <label for="country">Country of Origin</label>
+      <select id="country" required>
+        <option value="">-- Select Country --</option>
+      </select>
+    </div>
+
+    <div class="checkbox-group" id="usmcaGroup" style="display:none;">
+      <input type="checkbox" id="usmcaCompliant">
+      <label for="usmcaCompliant">USMCA Certificate of Origin (Rules of Origin met)</label>
+    </div>
+
+    <button type="submit">Calculate Tariff</button>
+  </form>
+
+  <div id="result" style="display:none;"></div>
+</div>
+
+<script>
+const WORKER = 'https://tariff-rules-live.sys1107.workers.dev/rules';
+let RULES = null;
+
+async function fetchRules() {
+  const status = document.getElementById('statusText');
+  status.textContent = '⏳ Fetching...';
   
-  <script>
-    document.querySelector('h1').textContent = 'JavaScript Works!';
+  try {
+    const res = await fetch(WORKER);
+    const data = await res.json();
     
-    fetch('https://tariff-rules-live.sys1107.workers.dev/rules')
-      .then(r => r.json())
-      .then(data => {
-        document.getElementById('output').innerHTML = 
-          `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-      })
-      .catch(err => {
-        document.getElementById('output').innerHTML = 
-          `<p style="color:red">ERROR: ${err.message}</p>`;
-      });
-  </script>
+    if (data.status === 'EMPTY') {
+      status.textContent = '⚠️ Rules empty';
+      return;
+    }
+    
+    RULES = data;
+    status.textContent = data.meta?.statusText || '✅ Rules loaded';
+    
+    const select = document.getElementById('country');
+    select.innerHTML = '<option value="">-- Select Country --</option>';
+    const countries = Object.entries(data.countries || {}).sort((a,b) => a[1].localeCompare(b[1]));
+    for (const [code, name] of countries) {
+      const opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = name;
+      select.appendChild(opt);
+    }
+  } catch (err) {
+    status.textContent = '❌ Failed';
+    console.error(err);
+  }
+}
+
+document.getElementById('country').addEventListener('change', function() {
+  const ftaInfo = RULES?.ftaCountries?.[this.value];
+  const group = document.getElementById('usmcaGroup');
+  group.style.display = (ftaInfo?.type === 'conditional') ? 'flex' : 'none';
+  document.getElementById('usmcaCompliant').checked = false;
+});
+
+document.getElementById('tariffForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  if (!RULES) { alert('Please wait for rules to load'); return; }
+  
+  const hsCode = document.getElementById('hsCode').value.trim();
+  const country = document.getElementById('country').value;
+  const usmca = document.getElementById('usmcaCompliant').checked;
+  
+  const result = calculate(hsCode, country, usmca);
+  display(result);
+});
+
+function calculate(hsInput, country, usmcaCompliant) {
+  const code10 = hsInput.replace(/[^0-9]/g, '').padEnd(10, '0').slice(0, 10);
+  const flags = RULES.hsCodeRules?.[code10]?.flags || {};
+  const ftaInfo = RULES.ftaCountries?.[country];
+  const mfnRate = getMFN(code10);
+  const recipRate = getRecip(country);
+  
+  let items = [];
+  let warnings = [];
+  let exemptions = [];
+  let waiveAll = false;
+  let treatAsNoFta = false;
+  
+  if (ftaInfo?.type === 'conditional') {
+    if (usmcaCompliant) {
+      items.push({ name: ftaInfo.fta + ' - Duty Free', rate: 0, tag: 'fta', source: ftaInfo.fta });
+      if (ftaInfo.waiveAllWhenCompliant) {
+        waiveAll = true;
+        exemptions.push('✅ ' + ftaInfo.fta + ': All measures WAIVED');
+      }
+    } else {
+      treatAsNoFta = true;
+      warnings.push('⚠️ ' + ftaInfo.fta + ' Certificate required for 0%');
+    }
+  } else if (ftaInfo?.type === 'minimum') {
+    const min = Number(ftaInfo.minRate || 0);
+    const base = Math.max(0, mfnRate, min);
+    items.push({ name: ftaInfo.fta + ' Minimum', rate: base, tag: 'ieepa', source: 'ftaMin' });
+    warnings.push(`⚠️ ${ftaInfo.fta}: Minimum ${(min*100).toFixed(1)}% applies`);
+  } else if (ftaInfo?.type === 'standard') {
+    items.push({ name: ftaInfo.fta + ' - Duty Free', rate: 0, tag: 'fta', source: ftaInfo.fta });
+    waiveAll = true;
+    exemptions.push('✅ ' + ftaInfo.fta + ': All measures WAIVED');
+  } else {
+    treatAsNoFta = true;
+  }
+  
+  if (!waiveAll) {
+    const ctx = { code10, country, flags, hasFta: !!ftaInfo && !treatAsNoFta, mfnRate, recipRate };
+    
+    for (const m of (RULES.measures || [])) {
+      if (m.kind === 'base' && treatAsNoFta) {
+        items.push({ name: m.name, rate: getRate(m, ctx), tag: m.tag || 'mfn', source: m.id });
+      } else if (m.kind === 'additive' && applies(m, ctx)) {
+        const r = getRate(m, ctx);
+        if (r > 0) items.push({ name: m.name, rate: r, tag: m.tag || 'ieepa', source: m.id });
+      }
+    }
+    
+    const ids = new Set(items.map(x => x.source).filter(Boolean));
+    for (const w of (RULES.waivers || [])) {
+      if (ids.has(w.whenMeasureApplied)) {
+        for (const wid of (w.waiveMeasures || [])) {
+          const before = items.length;
+          items = items.filter(x => x.source !== wid);
+          if (before !== items.length && w.note) exemptions.push('✅ ' + w.note);
+        }
+      }
+    }
+  }
+  
+  const total = items.reduce((sum, x) => sum + (x.rate || 0), 0);
+  const desc = RULES.hsCodeRules?.[code10]?.description || 'Product';
+  
+  return { code10, country, ftaInfo, items, total, warnings, exemptions, desc };
+}
+
+function applies(m, ctx) {
+  const w = m.appliesWhen || {};
+  if (w.countries && !w.countries.includes(ctx.country)) return false;
+  if (w.noFta === true && ctx.hasFta === true) return false;
+  if (w.flagsAll) {
+    for (const f of w.flagsAll) if (!ctx.flags[f]) return false;
+  }
+  return true;
+}
+
+function getRate(m, ctx) {
+  if (typeof m.rate === 'number') return m.rate;
+  if (m.rateSource === 'mfn') return ctx.mfnRate;
+  if (m.rateSource === 'reciprocal') return ctx.recipRate;
+  return 0;
+}
+
+function getMFN(code) {
+  if (!RULES?.mfnRates) return 0;
+  for (let len = 10; len >= 4; len--) {
+    const prefix = code.slice(0, len);
+    if (RULES.mfnRates[prefix] !== undefined) return Number(RULES.mfnRates[prefix]);
+  }
+  return 0;
+}
+
+function getRecip(country) {
+  if (!RULES?.reciprocalRates) return 0.1;
+  return RULES.reciprocalRates[country] || RULES.reciprocalRates.DEFAULT || 0.1;
+}
+
+function display(r) {
+  const div = document.getElementById('result');
+  div.style.display = 'block';
+  
+  const countryName = RULES.countries[r.country] || r.country;
+  const ftaText = r.ftaInfo?.fta || 'No FTA';
+  
+  let html = `
+    <div class="result">
+      <div class="result-header">
+        <div class="result-title">${r.desc}<br><small style="font-size:0.8rem;color:#666;">HS ${r.code10} from ${countryName}</small></div>
+        <div class="total-rate">${(r.total*100).toFixed(1)}%</div>
+      </div>
+  `;
+  
+  if (r.items.length > 0) {
+    html += '<div class="tariff-breakdown">';
+    for (const item of r.items) {
+      html += `
+        <div class="tariff-item ${item.tag}">
+          <div style="flex:1;"><div class="tariff-name">✓ ${item.name}</div></div>
+          <div class="tariff-rate">${(item.rate*100).toFixed(1)}%</div>
+          <div class="tariff-tag ${item.tag}">${item.tag.toUpperCase()}</div>
+        </div>
+      `;
+    }
+    html += '</div>';
+  }
+  
+  if (r.warnings.length > 0) {
+    html += '<div class="warnings">';
+    for (const w of r.warnings) html += `<div class="warning-item">${w}</div>`;
+    html += '</div>';
+  }
+  
+  if (r.exemptions.length > 0) {
+    html += '<div class="exemptions">';
+    for (const e of r.exemptions) html += `<div class="exemption-item">${e}</div>`;
+    html += '</div>';
+  }
+  
+  html += `
+    <div class="meta-info">
+      <div class="meta-row"><span><strong>FTA Status:</strong></span><span>${ftaText}</span></div>
+      <div class="meta-row"><span><strong>Rules Version:</strong></span><span>${RULES.meta?.rulesVersion || 'Unknown'}</span></div>
+    </div></div>
+  `;
+  
+  div.innerHTML = html;
+  div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+window.addEventListener('DOMContentLoaded', fetchRules);
+setInterval(fetchRules, 3600000);
+</script>
 </body>
 </html>
