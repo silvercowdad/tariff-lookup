@@ -316,7 +316,7 @@
 
     <footer>
       <p>⚡ JSON-driven measures/waivers • refresh or Update button • hourly auto refresh</p>
-      <p style="margin-top:6px; font-size:11px;">Update tariff-rules.json → users refresh / click Update</p>
+      <p style="margin-top:6px; font-size:11px;">Admin updates KV → users click Update to fetch /rules</p>
     </footer>
   </div>
 
@@ -324,7 +324,7 @@
     // =========================
     // CONFIG
     // =========================
-    const RULES_URL = "https://tariff-rules-live.sys1107.workers.dev";
+    const RULES_URL = "https://tariff-rules-live.sys1107.workers.dev/rules";
     const AUTO_REFRESH_MS = 60 * 60 * 1000; // 1 hour = 3,600,000ms (더블체크 완료)
     const HISTORY_KEY = "tariff_lookup_history_v1";
     const HISTORY_MAX = 12;
@@ -853,4 +853,5 @@
   </script>
 </body>
 </html>
+
 
