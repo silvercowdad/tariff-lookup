@@ -1,57 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>US Tariff Lookup - Comparison Mode</title>
+<title>US Tariff Lookup - Hierarchy Mode</title>
 <style>
-/* 기존 스타일 유지 + 비교창 스타일 추가 */
+/* 디자인 유지 */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; color: #333; }
+body { font-family: -apple-system, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; color: #333; }
 .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 40px; }
 h1 { font-size: 2.2rem; margin-bottom: 10px; color: #667eea; text-align: center; }
 .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 0.95rem; }
 .status-bar { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
 .status-text { color: #28a745; font-weight: 500; }
-.update-btn { background: #667eea; color: white; border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
 .form-group { margin-bottom: 20px; }
 label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
-input, select { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; }
+select { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; background: #fff; }
 button[type="submit"] { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 10px; }
-
-/* 결과창 및 비교 레이아웃 */
 .result-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 30px; }
 .result-grid.dual { grid-template-columns: 1fr 1fr; }
 .result-box { padding: 20px; background: #f8f9fa; border-radius: 12px; border-top: 4px solid #667eea; }
 .result-box.compliant { border-top-color: #28a745; background: #f0fff4; }
-.box-title { font-weight: 800; font-size: 0.9rem; margin-bottom: 15px; text-transform: uppercase; color: #555; }
 .total-rate { font-size: 2.5rem; font-weight: 800; color: #333; margin-bottom: 10px; }
 .tariff-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 8px 0; border-bottom: 1px solid #eee; }
-.tariff-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: #eee; font-weight: bold; }
+.tag { font-size: 0.65rem; padding: 2px 6px; background: #eef2ff; color: #4f46e5; border-radius: 4px; font-weight: bold; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>🇺🇸 US Tariff Lookup</h1>
-  <p class="subtitle">Reed Smith Aligned - Comparison Mode</p>
+  <p class="subtitle">EO 14289 Stacking Hierarchy Aligned</p>
 
   <div class="status-bar">
-    <span class="status-text" id="statusText">⏳ Loading rules...</span>
-    <button class="update-btn" onclick="fetchRules()">⬇️ Update</button>
+    <span class="status-text" id="statusText">⏳ Loading Rules...</span>
   </div>
 
   <form id="tariffForm">
     <div class="form-group">
-      <label for="hsCode">Target Product</label>
+      <label>Target Product</label>
       <select id="hsCode" required>
-        <option value="">-- Select Product --</option>
-        <option value="8507600010">EV Battery (8507.60.00.10)</option>
-        <option value="8507600020">ESS / MPB Battery (8507.60.00.20)</option>
+        <option value="8507600010">EV Battery (Auto Part)</option>
+        <option value="8507600020">ESS Battery (Stationary)</option>
+        <option value="semiconductor">Advanced Computing Chip</option>
       </select>
     </div>
-
     <div class="form-group">
-      <label for="country">Country of Origin</label>
+      <label>Country of Origin</label>
       <select id="country" required>
         <option value="">-- Select Country --</option>
       </select>
@@ -63,111 +57,98 @@ button[type="submit"] { width: 100%; padding: 16px; background: linear-gradient(
 </div>
 
 <script>
-const WORKER = 'https://tariff-rules-live.sys1107.workers.dev/rules';
+// 워커 주소를 본인의 주소로 꼭 바꾸세요!
+const WORKER_URL = 'https://tariff-rules-live.sys1107.workers.dev/rules';
 let RULES = null;
+const targetCountries = ["CA", "MX", "KR", "CN", "MY", "VN"];
 
 async function fetchRules() {
   const status = document.getElementById('statusText');
-  status.textContent = '⏳ Fetching...';
   try {
-    const res = await fetch(WORKER, { cache: "no-store" });
-    const data = await res.json();
-    RULES = data;
-    status.textContent = data.meta?.statusText || '✅ Rules loaded';
+    const res = await fetch(WORKER_URL);
+    RULES = await res.json();
+    status.textContent = RULES.meta.statusText;
     
     const select = document.getElementById('country');
-    const currentVal = select.value;
     select.innerHTML = '<option value="">-- Select Country --</option>';
-    const countries = Object.entries(data.countries || {}).sort((a,b) => a[1].localeCompare(b[1]));
-    for (const [code, name] of countries) {
-      const opt = document.createElement('option');
-      opt.value = code; opt.textContent = name;
-      select.appendChild(opt);
-    }
-    select.value = currentVal;
+    targetCountries.forEach(code => {
+      if (RULES.countries[code]) {
+        const opt = document.createElement('option');
+        opt.value = code; opt.textContent = RULES.countries[code];
+        select.appendChild(opt);
+      }
+    });
   } catch (err) { status.textContent = '❌ Connection Failed'; }
 }
 
 document.getElementById('tariffForm').addEventListener('submit', function(e) {
   e.preventDefault();
   if (!RULES) return;
-  
   const hs = document.getElementById('hsCode').value;
   const country = document.getElementById('country').value;
-  const ftaInfo = RULES.ftaCountries?.[country];
   const area = document.getElementById('resultArea');
   
-  // 1. 일반 결과 (미충족 시)
-  const resNormal = calculate(hs, country, false);
-  
-  if (ftaInfo?.type === 'conditional') {
-    // 2. USMCA 결과 (충족 시)
-    const resUSMCA = calculate(hs, country, true);
+  if (['MX', 'CA'].includes(country)) {
     area.className = "result-grid dual";
-    area.innerHTML = renderBox(resNormal, "Scenario A: Standard (Non-USMCA)") + 
-                     renderBox(resUSMCA, "Scenario B: USMCA Compliant", true);
+    area.innerHTML = renderBox(calculate(hs, country, false), "Standard (Non-USMCA)") + 
+                     renderBox(calculate(hs, country, true), "USMCA Compliant", true);
   } else {
     area.className = "result-grid";
-    area.innerHTML = renderBox(resNormal, "Standard Result");
+    area.innerHTML = renderBox(calculate(hs, country, false), "Final Analysis");
   }
-  area.scrollIntoView({ behavior: 'smooth' });
 });
 
-function calculate(hsInput, country, compliant) {
-  const flags = RULES.hsCodeRules?.[hsInput]?.flags || {};
-  const ftaInfo = RULES.ftaCountries?.[country];
-  const mfnRate = getMFN(hsInput);
-  let items = [], total = 0;
+function calculate(hs, country, compliant) {
+  const rule = RULES.hsCodeRules[hs];
+  const mfn = 0.034;
+  let items = [{ n: 'MFN Base', r: mfn }];
+  let total = mfn;
 
-  if (ftaInfo?.type === 'target_15') {
-    total = 0.15;
-    items.push({ name: 'MFN Base', rate: mfnRate, tag: 'mfn' });
-    items.push({ name: 'TA Adjustment', rate: 0.15 - mfnRate, tag: 'adj' });
-  } else if (ftaInfo?.type === 'conditional' && compliant) {
-    total = 0;
-    items.push({ name: ftaInfo.fta + ' Duty Free', rate: 0, tag: 'fta' });
-  } else {
-    total = mfnRate;
-    items.push({ name: 'MFN Base', rate: mfnRate, tag: 'mfn' });
-    for (const m of (RULES.measures || [])) {
-      if (m.kind === 'additive' && applies(m, country, flags)) {
-        total += m.rate;
-        items.push({ name: m.name, rate: m.rate, tag: m.tag });
-      }
+  // 1. Semiconductor Override
+  if (hs === 'semiconductor') {
+    return { total: 0.25, items: [{ n: 'S232 Semiconductor', r: 0.25, t: 'OVERRIDE' }] };
+  }
+
+  // 2. Auto Parts (EV Battery) Hierarchy
+  if (rule.flags.includes('isAutoPart')) {
+    if (country === 'KR') return { total: 0.15, items: [{ n: 'KORUS Auto Cap', r: 0.15, t: 'EXCLUSIVE' }] };
+    if (compliant) return { total: 0, items: [{ n: 'USMCA Free', r: 0, t: 'FTA' }] };
+
+    total = mfn + 0.25;
+    items.push({ n: 'S232 Auto Parts', r: 0.25, t: 'SUPERSIDE' });
+    if (country === 'CN') { total += 0.25; items.push({ n: 'Section 301', r: 0.25 }); }
+    return { total, items };
+  }
+
+  // 3. Proportional Content Logic
+  const metalRatio = rule.metalContent || 0;
+  const metalDuty = 0.50 * metalRatio;
+  total += metalDuty;
+  items.push({ n: `S232 Metal (${(metalRatio*100).toFixed(0)}%)`, r: metalDuty, t: 'CONTENT' });
+
+  if (!compliant) {
+    const recip = (RULES.reciprocalRates[country] || 0.1) * (1 - metalRatio);
+    total += recip;
+    items.push({ n: 'Reciprocal (Non-metal)', r: recip, t: 'PROPORTIONAL' });
+    
+    if (RULES.fentanylRates[country]) {
+        const fen = RULES.fentanylRates[country] * (1 - metalRatio);
+        total += fen;
+        items.push({ n: 'IEEPA (Fentanyl)', r: fen });
     }
   }
   return { total, items };
 }
 
-function applies(m, country, flags) {
-  const w = m.appliesWhen || {};
-  if (w.countries && !w.countries.includes(country)) return false;
-  if (w.notCountries && w.notCountries.includes(country)) return false;
-  if (w.flagsAll) { for (const f of w.flagsAll) if (!flags[f]) return false; }
-  if (w.notFlags) { for (const f of w.notFlags) if (flags[f]) return false; }
-  return true;
-}
-
-function getMFN(code) {
-  for (let len = 10; len >= 4; len--) {
-    const p = code.slice(0, len);
-    if (RULES.mfnRates[p] !== undefined) return RULES.mfnRates[p];
-  }
-  return 0.034;
-}
-
-function renderBox(r, title, isCompliant = false) {
-  let itemsHtml = r.items.map(i => `
-    <div class="tariff-item">
-      <span>${i.name}</span>
-      <span><strong>${(i.rate*100).toFixed(1)}%</strong></span>
-    </div>`).join('');
-    
+function renderBox(r, title, isComp = false) {
   return `
-    <div class="result-box ${isCompliant ? 'compliant' : ''}">
-      <div class="box-title">${title}</div>
+    <div class="result-box ${isComp ? 'compliant' : ''}">
+      <div style="font-size:0.7rem; font-weight:bold; color:#666; margin-bottom:10px;">${title}</div>
       <div class="total-rate">${(r.total*100).toFixed(1)}%</div>
-      <div class="breakdown">${itemsHtml}</div>
+      ${r.items.map(i => `<div class="tariff-item">
+        <span>${i.n} ${i.t ? `<span class="tag">${i.t}</span>` : ''}</span>
+        <strong>${(i.rate || i.r * 100).toFixed(1)}%</strong>
+      </div>`).join('')}
     </div>`;
 }
 
