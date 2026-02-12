@@ -1,98 +1,377 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>US Tariff Lookup 2.0</title>
-    <style>
-        body { font-family: -apple-system, sans-serif; background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); min-height: 100vh; padding: 40px; color: #333; }
-        .card { background: white; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        h1 { color: #1e3a8a; text-align: center; margin-bottom: 5px; }
-        .status { text-align: center; font-size: 0.8rem; color: #10b981; margin-bottom: 30px; }
-        .group { margin-bottom: 20px; }
-        label { display: block; font-weight: 600; margin-bottom: 8px; }
-        select, button { width: 100%; padding: 14px; border-radius: 8px; border: 2px solid #e2e8f0; font-size: 1rem; }
-        button { background: #1e3a8a; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
-        button:hover { background: #1e40af; }
-        .result-area { margin-top: 30px; display: grid; gap: 15px; }
-        .result-area.dual { grid-template-columns: 1fr 1fr; }
-        .box { padding: 20px; background: #f8fafc; border-radius: 12px; border-left: 6px solid #1e3a8a; }
-        .box.green { border-left-color: #10b981; background: #f0fdf4; }
-        .rate-val { font-size: 2.5rem; font-weight: 800; color: #1e293b; margin: 5px 0; }
-        .detail { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 4px 0; border-bottom: 1px solid #e2e8f0; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US Tariff Calculator - Battery ESS</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  padding: 40px;
+}
+h1 {
+  font-size: 2rem;
+  color: #667eea;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.form-group {
+  margin-bottom: 20px;
+}
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #444;
+}
+select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+.checkbox-group input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.checkbox-group label {
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+button {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+.result {
+  margin-top: 30px;
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+}
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #dee2e6;
+}
+.result-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+}
+.total-rate {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #667eea;
+}
+.tariff-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: white;
+  border-radius: 8px;
+  border-left: 3px solid #dee2e6;
+}
+.tariff-item.MFN { border-left-color: #28a745; }
+.tariff-item.FTA { border-left-color: #17a2b8; }
+.tariff-item.SEC232 { border-left-color: #fd7e14; }
+.tariff-item.SEC301 { border-left-color: #dc3545; }
+.tariff-item.IEEPA { border-left-color: #6f42c1; }
+.tariff-name {
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+}
+.tariff-rate {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-left: 16px;
+}
+.tariff-tag {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-left: 12px;
+}
+.tariff-tag.MFN { background: #d4edda; color: #155724; }
+.tariff-tag.FTA { background: #d1ecf1; color: #0c5460; }
+.tariff-tag.SEC232 { background: #fff3cd; color: #856404; }
+.tariff-tag.SEC301 { background: #f8d7da; color: #721c24; }
+.tariff-tag.IEEPA { background: #e2d9f3; color: #4a148c; }
+.warnings, .exemptions {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 8px;
+}
+.warnings {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+.exemptions {
+  background: #d4edda;
+  border-left: 4px solid #28a745;
+}
+.item {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.metadata {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #dee2e6;
+  font-size: 0.85rem;
+  color: #666;
+}
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #667eea;
+  font-weight: 600;
+}
+</style>
 </head>
 <body>
-<div class="card">
-    <h1>🇺🇸 Tariff Hierarchy</h1>
-    <div class="status" id="statusText">CBP API Connected</div>
 
-    <div class="group">
-        <label>Product Application</label>
-        <select id="hsCode">
-            <option value="8507600010">EV Battery (Strategic)</option>
-            <option value="8507600020">ESS Battery (Stationary)</option>
-        </select>
-    </div>
-    <div class="group">
-        <label>Country of Origin</label>
-        <select id="country">
-            <option value="CA">Canada (35% Recip.)</option>
-            <option value="MX">Mexico (25% Recip.)</option>
-            <option value="KR">South Korea (15% Flat)</option>
-            <option value="CN">China (Stacking)</option>
-            <option value="MY">Malaysia (19% Recip.)</option>
-            <option value="VN">Vietnam (20% Recip.)</option>
-        </select>
-    </div>
-    <button onclick="calculate()">Analyze Tariff Breakdown</button>
+<div class="container">
+  <h1>🔋 US Tariff Calculator</h1>
 
-    <div id="resultArea" class="result-area"></div>
+  <form id="form">
+    <div class="form-group">
+      <label for="hsCode">Battery Type</label>
+      <select id="hsCode" required>
+        <option value="">-- Select Battery Type --</option>
+        <option value="8507600010">8507.60.00.10 - EV Batteries (Electric Vehicles)</option>
+        <option value="8507600020">8507.60.00.20 - ESS/MPB Batteries (Energy Storage)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="country">Country of Origin</label>
+      <select id="country" required>
+        <option value="">-- Select Country --</option>
+        <option value="CN">🇨🇳 China</option>
+        <option value="MX">🇲🇽 Mexico</option>
+        <option value="CA">🇨🇦 Canada</option>
+        <option value="KR">🇰🇷 South Korea</option>
+        <option value="MY">🇲🇾 Malaysia</option>
+        <option value="VN">🇻🇳 Vietnam</option>
+      </select>
+    </div>
+
+    <div class="checkbox-group" id="usmcaGroup" style="display:none;">
+      <input type="checkbox" id="usmcaCompliant">
+      <label for="usmcaCompliant">
+        ✅ USMCA Certificate of Origin (Rules of Origin met)
+      </label>
+    </div>
+
+    <button type="submit">Calculate Tariff</button>
+  </form>
+
+  <div id="result" style="display:none;"></div>
 </div>
 
 <script>
-    // ⚠️ [필독] YOUR-WORKER-URL 부분을 사용자님의 실제 Cloudflare 워커 주소로 꼭 바꾸세요!
-    // 예시: const API = 'https://tariff-lookup.abc.workers.dev/calculate';
-    const API = 'tariff-rules-live.sys1107.workers.dev';
+const WORKER_URL = 'https://tariff-rules-live.sys1107.workers.dev';
 
-    async function calculate() {
-        const hs = document.getElementById('hsCode').value;
-        const country = document.getElementById('country').value;
-        const area = document.getElementById('resultArea');
-        const btn = document.querySelector('button');
+// Country selection handler
+document.getElementById('country').addEventListener('change', function() {
+  const country = this.value;
+  const usmcaGroup = document.getElementById('usmcaGroup');
+  
+  // Show USMCA checkbox for Mexico and Canada
+  if (country === 'MX' || country === 'CA') {
+    usmcaGroup.style.display = 'flex';
+  } else {
+    usmcaGroup.style.display = 'none';
+    document.getElementById('usmcaCompliant').checked = false;
+  }
+});
 
-        try {
-            btn.innerText = "Calculating...";
-            if (['CA', 'MX'].includes(country)) {
-                area.className = "result-area dual";
-                const [std, cpt] = await Promise.all([
-                    fetch(`${API}?hs=${hs}&country=${country}&compliant=false`).then(r => r.json()),
-                    fetch(`${API}?hs=${hs}&country=${country}&compliant=true`).then(r => r.json())
-                ]);
-                area.innerHTML = render(std, "Non-USMCA") + render(cpt, "USMCA Compliant", true);
-            } else {
-                area.className = "result-area";
-                const res = await fetch(`${API}?hs=${hs}&country=${country}`).then(r => r.json());
-                area.innerHTML = render(res, "Final Analysis");
-            }
-        } catch (err) {
-            alert("연결 실패! 워커 주소가 정확한지, 배포가 되었는지 확인하세요.");
-            console.error(err);
-        } finally {
-            btn.innerText = "Analyze Tariff Breakdown";
-        }
+// Form submission
+document.getElementById('form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const hsCode = document.getElementById('hsCode').value;
+  const country = document.getElementById('country').value;
+  const usmcaCompliant = document.getElementById('usmcaCompliant').checked;
+  
+  if (!hsCode || !country) {
+    alert('Please select both battery type and country');
+    return;
+  }
+  
+  const resultDiv = document.getElementById('result');
+  resultDiv.style.display = 'block';
+  resultDiv.innerHTML = '<div class="loading">⏳ Calculating...</div>';
+  
+  try {
+    const url = `${WORKER_URL}/calculate?hs=${hsCode}&country=${country}&usmca=${usmcaCompliant}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    
+    if (data.error) {
+      throw new Error(data.error);
     }
+    
+    displayResult(data);
+    
+  } catch (err) {
+    resultDiv.innerHTML = `
+      <div class="result">
+        <div style="color: #dc3545; font-weight: 600;">
+          ❌ Error: ${err.message}
+        </div>
+      </div>
+    `;
+  }
+});
 
-    function render(data, title, green = false) {
-        const lines = data.items.map(i => `<div class="detail"><span>${i.n}</span><strong>${(i.r*100).toFixed(1)}%</strong></div>`).join('');
-        return `<div class="box ${green ? 'green' : ''}">
-            <small style="text-transform:uppercase; font-weight:bold; color: #64748b;">${title}</small>
-            <div class="rate-val">${(data.total * 100).toFixed(1)}%</div>
-            <div>${lines}</div>
-        </div>`;
+function displayResult(data) {
+  const resultDiv = document.getElementById('result');
+  
+  const countryNames = {
+    CN: '🇨🇳 China',
+    MX: '🇲🇽 Mexico',
+    CA: '🇨🇦 Canada',
+    KR: '🇰🇷 South Korea',
+    MY: '🇲🇾 Malaysia',
+    VN: '🇻🇳 Vietnam',
+  };
+  
+  const batteryTypes = {
+    '8507600010': 'EV Batteries (Electric Vehicles)',
+    '8507600020': 'ESS/MPB Batteries (Energy Storage)',
+  };
+  
+  let html = `
+    <div class="result">
+      <div class="result-header">
+        <div class="result-title">
+          ${batteryTypes[data.hsCode] || data.description}<br>
+          <small style="font-size:0.8rem;color:#666;">
+            HS ${data.hsCode} from ${countryNames[data.country] || data.country}
+          </small>
+        </div>
+        <div class="total-rate">${(data.total * 100).toFixed(1)}%</div>
+      </div>
+  `;
+  
+  if (data.items && data.items.length > 0) {
+    html += '<div>';
+    for (const item of data.items) {
+      html += `
+        <div class="tariff-item ${item.tag}">
+          <div style="flex:1;">
+            <div class="tariff-name">✓ ${item.name}</div>
+          </div>
+          <div class="tariff-rate">${(item.rate * 100).toFixed(1)}%</div>
+          <div class="tariff-tag ${item.tag}">${item.tag}</div>
+        </div>
+      `;
     }
+    html += '</div>';
+  }
+  
+  if (data.warnings && data.warnings.length > 0) {
+    html += '<div class="warnings">';
+    for (const w of data.warnings) {
+      html += `<div class="item">${w}</div>`;
+    }
+    html += '</div>';
+  }
+  
+  if (data.exemptions && data.exemptions.length > 0) {
+    html += '<div class="exemptions">';
+    for (const e of data.exemptions) {
+      html += `<div class="item">${e}</div>`;
+    }
+    html += '</div>';
+  }
+  
+  if (data.metadata) {
+    html += `
+      <div class="metadata">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span><strong>Calculated At:</strong></span>
+          <span>${new Date(data.metadata.calculatedAt).toLocaleString()}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span><strong>Rules Version:</strong></span>
+          <span>${data.metadata.rulesVersion}</span>
+        </div>
+      </div>
+    `;
+  }
+  
+  html += '</div>';
+  resultDiv.innerHTML = html;
+  resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 </script>
+
 </body>
 </html>
+```
 
+---
 
+## **🚀 배포 순서**
+
+1. **Cloudflare Worker 배포**
+   - 위 Worker 코드 복사
+   - Cloudflare Dashboard → Workers → Edit
+   - Save and Deploy
+
+2. **Admin Update 실행**
+```
+   https://tariff-rules-live.sys1107.workers.dev/admin/update?token=YOUR_TOKEN
