@@ -358,6 +358,8 @@ function displayResult(data) {
   resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 </script>
+  
+<script>
 window.addEventListener('DOMContentLoaded', async function() {
   try {
     const res = await fetch('https://tariff-rules-live.sys1107.workers.dev/check-updates');
@@ -452,4 +454,5 @@ document.head.appendChild(style);
 2. **Admin Update 실행**
 ```
    https://tariff-rules-live.sys1107.workers.dev/admin/update?token=YOUR_TOKEN
+
 
