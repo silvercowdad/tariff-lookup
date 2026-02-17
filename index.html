@@ -12,29 +12,47 @@ body {
   min-height: 100vh;
   padding: 20px;
 }
-.container {
-  max-width: 800px;
+
+/* 2분할 컨테이너 */
+.main-grid {
+  max-width: 1400px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.container, .news-container {
   background: white;
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   padding: 40px;
 }
-h1 {
-  font-size: 2rem;
+
+h1, h2 {
+  font-size: 1.8rem;
   color: #667eea;
   text-align: center;
   margin-bottom: 30px;
 }
+
 .form-group {
   margin-bottom: 20px;
 }
+
 label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
   color: #444;
 }
+
 select {
   width: 100%;
   padding: 12px 16px;
@@ -43,10 +61,12 @@ select {
   font-size: 1rem;
   cursor: pointer;
 }
+
 select:focus {
   outline: none;
   border-color: #667eea;
 }
+
 .checkbox-group {
   display: flex;
   align-items: center;
@@ -56,16 +76,19 @@ select:focus {
   background: #f8f9fa;
   border-radius: 8px;
 }
+
 .checkbox-group input[type="checkbox"] {
   width: 20px;
   height: 20px;
   cursor: pointer;
 }
+
 .checkbox-group label {
   margin: 0;
   font-weight: 500;
   cursor: pointer;
 }
+
 button {
   width: 100%;
   padding: 16px;
@@ -78,10 +101,12 @@ button {
   cursor: pointer;
   margin-top: 10px;
 }
+
 button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
+
 .result {
   margin-top: 30px;
   padding: 24px;
@@ -89,6 +114,7 @@ button:hover {
   border-radius: 12px;
   border-left: 4px solid #667eea;
 }
+
 .result-header {
   display: flex;
   justify-content: space-between;
@@ -97,16 +123,19 @@ button:hover {
   padding-bottom: 16px;
   border-bottom: 2px solid #dee2e6;
 }
+
 .result-title {
   font-size: 1.2rem;
   font-weight: 700;
   color: #333;
 }
+
 .total-rate {
   font-size: 2rem;
   font-weight: 800;
   color: #667eea;
 }
+
 .tariff-item {
   display: flex;
   justify-content: space-between;
@@ -117,22 +146,26 @@ button:hover {
   border-radius: 8px;
   border-left: 3px solid #dee2e6;
 }
+
 .tariff-item.MFN { border-left-color: #28a745; }
 .tariff-item.FTA { border-left-color: #17a2b8; }
 .tariff-item.SEC232 { border-left-color: #fd7e14; }
 .tariff-item.SEC301 { border-left-color: #dc3545; }
 .tariff-item.IEEPA { border-left-color: #6f42c1; }
+
 .tariff-name {
   font-weight: 600;
   color: #333;
   flex: 1;
 }
+
 .tariff-rate {
   font-size: 1.2rem;
   font-weight: 700;
   color: #667eea;
   margin-left: 16px;
 }
+
 .tariff-tag {
   font-size: 0.75rem;
   padding: 4px 8px;
@@ -141,29 +174,35 @@ button:hover {
   text-transform: uppercase;
   margin-left: 12px;
 }
+
 .tariff-tag.MFN { background: #d4edda; color: #155724; }
 .tariff-tag.FTA { background: #d1ecf1; color: #0c5460; }
 .tariff-tag.SEC232 { background: #fff3cd; color: #856404; }
 .tariff-tag.SEC301 { background: #f8d7da; color: #721c24; }
 .tariff-tag.IEEPA { background: #e2d9f3; color: #4a148c; }
+
 .warnings, .exemptions {
   margin-top: 20px;
   padding: 16px;
   border-radius: 8px;
 }
+
 .warnings {
   background: #fff3cd;
   border-left: 4px solid #ffc107;
 }
+
 .exemptions {
   background: #d4edda;
   border-left: 4px solid #28a745;
 }
+
 .item {
   margin-bottom: 8px;
   font-size: 0.9rem;
   line-height: 1.5;
 }
+
 .metadata {
   margin-top: 20px;
   padding-top: 16px;
@@ -171,53 +210,128 @@ button:hover {
   font-size: 0.85rem;
   color: #666;
 }
+
 .loading {
   text-align: center;
   padding: 20px;
   color: #667eea;
   font-weight: 600;
 }
+
+/* 뉴스 스타일 */
+.news-container h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.news-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.news-item {
+  padding: 15px;
+  margin-bottom: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  transition: all 0.2s;
+}
+
+.news-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.news-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.news-source {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #667eea;
+}
+
+.news-date {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.news-title {
+  display: block;
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.news-title:hover {
+  color: #667eea;
+}
+
+.news-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+}
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>🔋 US Tariff Calculator</h1>
+<div class="main-grid">
+  <!-- 왼쪽: 계산기 -->
+  <div class="container">
+    <h1>🔋 Tariff Calculator</h1>
 
-  <form id="form">
-    <div class="form-group">
-      <label for="hsCode">Battery Type</label>
-      <select id="hsCode" required>
-        <option value="">-- Select Battery Type --</option>
-        <option value="8507600010">8507.60.00.10 - EV Batteries (Electric Vehicles)</option>
-        <option value="8507600020">8507.60.00.20 - ESS/MPB Batteries (Energy Storage)</option>
-      </select>
+    <form id="form">
+      <div class="form-group">
+        <label for="hsCode">Battery Type</label>
+        <select id="hsCode" required>
+          <option value="">-- Select Battery Type --</option>
+          <option value="8507600010">8507.60.00.10 - EV Batteries</option>
+          <option value="8507600020">8507.60.00.20 - ESS/MPB</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country of Origin</label>
+        <select id="country" required>
+          <option value="">-- Select Country --</option>
+          <option value="CN">🇨🇳 China</option>
+          <option value="MX">🇲🇽 Mexico</option>
+          <option value="CA">🇨🇦 Canada</option>
+          <option value="KR">🇰🇷 South Korea</option>
+          <option value="MY">🇲🇾 Malaysia</option>
+          <option value="VN">🇻🇳 Vietnam</option>
+        </select>
+      </div>
+
+      <div class="checkbox-group" id="usmcaGroup" style="display:none;">
+        <input type="checkbox" id="usmcaCompliant">
+        <label for="usmcaCompliant">
+          ✅ USMCA Certificate of Origin
+        </label>
+      </div>
+
+      <button type="submit">Calculate Tariff</button>
+    </form>
+
+    <div id="result" style="display:none;"></div>
+  </div>
+
+  <!-- 오른쪽: 뉴스 -->
+  <div class="news-container">
+    <h2>📰 Trade News</h2>
+    <div id="news-list" class="news-list">
+      <div class="loading">⏳ Loading news...</div>
     </div>
-
-    <div class="form-group">
-      <label for="country">Country of Origin</label>
-      <select id="country" required>
-        <option value="">-- Select Country --</option>
-        <option value="CN">🇨🇳 China</option>
-        <option value="MX">🇲🇽 Mexico</option>
-        <option value="CA">🇨🇦 Canada</option>
-        <option value="KR">🇰🇷 South Korea</option>
-        <option value="MY">🇲🇾 Malaysia</option>
-        <option value="VN">🇻🇳 Vietnam</option>
-      </select>
-    </div>
-
-    <div class="checkbox-group" id="usmcaGroup" style="display:none;">
-      <input type="checkbox" id="usmcaCompliant">
-      <label for="usmcaCompliant">
-        ✅ USMCA Certificate of Origin (Rules of Origin met)
-      </label>
-    </div>
-
-    <button type="submit">Calculate Tariff</button>
-  </form>
-
-  <div id="result" style="display:none;"></div>
+  </div>
 </div>
 
 <script>
@@ -228,7 +342,6 @@ document.getElementById('country').addEventListener('change', function() {
   const country = this.value;
   const usmcaGroup = document.getElementById('usmcaGroup');
   
-  // Show USMCA checkbox for Mexico and Canada
   if (country === 'MX' || country === 'CA') {
     usmcaGroup.style.display = 'flex';
   } else {
@@ -289,8 +402,8 @@ function displayResult(data) {
   };
   
   const batteryTypes = {
-    '8507600010': 'EV Batteries (Electric Vehicles)',
-    '8507600020': 'ESS/MPB Batteries (Energy Storage)',
+    '8507600010': 'EV Batteries',
+    '8507600020': 'ESS/MPB Batteries',
   };
   
   let html = `
@@ -355,10 +468,62 @@ function displayResult(data) {
   
   html += '</div>';
   resultDiv.innerHTML = html;
-  resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
+
+// ===================================================================
+// 🆕 뉴스 로드
+// ===================================================================
+async function loadNews() {
+  try {
+    const res = await fetch(`${WORKER_URL}/news`);
+    const news = await res.json();
+    
+    if (!news || news.length === 0) {
+      document.getElementById('news-list').innerHTML = `
+        <div class="news-empty">
+          📭 No news available yet<br>
+          <small style="color:#999;">Check back after the first daily update</small>
+        </div>
+      `;
+      return;
+    }
+    
+    const html = news.map(item => {
+      const date = new Date(item.date).toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        year: 'numeric'
+      });
+      
+      return `
+        <div class="news-item">
+          <div class="news-header">
+            <span class="news-source">🔵 ${item.source}</span>
+            <span class="news-date">${date}</span>
+          </div>
+          <a href="${item.url}" target="_blank" class="news-title">
+            ${item.title}
+          </a>
+        </div>
+      `;
+    }).join('');
+    
+    document.getElementById('news-list').innerHTML = html;
+    
+  } catch (err) {
+    document.getElementById('news-list').innerHTML = `
+      <div class="news-empty" style="color: #dc3545;">
+        ❌ Failed to load news<br>
+        <small>${err.message}</small>
+      </div>
+    `;
+  }
+}
+
+// 페이지 로드 시 뉴스 가져오기
+loadNews();
 </script>
-  
+
 <script>
 window.addEventListener('DOMContentLoaded', async function() {
   try {
@@ -446,13 +611,35 @@ document.head.appendChild(style);
 
 ## **🚀 배포 순서**
 
-1. **Cloudflare Worker 배포**
-   - 위 Worker 코드 복사
-   - Cloudflare Dashboard → Workers → Edit
-   - Save and Deploy
-
-2. **Admin Update 실행**
+### **1. Worker 배포**
 ```
-   https://tariff-rules-live.sys1107.workers.dev/admin/update?token=YOUR_TOKEN
+Cloudflare Dashboard
+→ Workers → tariff-rules-live
+→ Quick Edit
+→ 위의 전체 Worker 코드 복사/붙여넣기
+→ Save and Deploy
+```
 
+### **2. HTML 배포**
+```
+GitHub → silvercowdad/tariff-lookup
+→ index.html
+→ 위의 전체 HTML 코드로 교체
+→ Commit
+```
 
+### **3. 테스트**
+```
+브라우저:
+https://silvercowdad.github.io/tariff-lookup/
+
+확인:
+✅ 왼쪽: 계산기
+✅ 오른쪽: 뉴스 (처음엔 빈 메시지)
+```
+
+### **4. Cron 수동 실행 (첫 뉴스 수집)**
+```
+Cloudflare → Triggers → Cron → Trigger
+
+또는 내일 오후 6시까지 기다리기
