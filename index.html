@@ -358,6 +358,83 @@ function displayResult(data) {
   resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 </script>
+window.addEventListener('DOMContentLoaded', async function() {
+  try {
+    const res = await fetch('https://tariff-rules-live.sys1107.workers.dev/check-updates');
+    const data = await res.json();
+    
+    if (data.hasUpdate) {
+      const timestamp = new Date(data.timestamp).toLocaleString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+        color: white;
+        padding: 15px 20px;
+        text-align: center;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        animation: slideDown 0.4s ease-out;
+      `;
+      
+      banner.innerHTML = `
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+          <strong style="font-size: 16px;">🚨 Reed Smith 업데이트 감지!</strong>
+          <span style="font-size: 14px; opacity: 0.9;">변경: ${timestamp}</span>
+          <div style="display: flex; gap: 10px;">
+            <button onclick="window.open('https://www.tradecompliance.reedsmith.com/trump-2-0-tariff-tracker', '_blank')" 
+                    style="background: white; color: #ff6b6b; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px;">
+              📄 페이지 열기
+            </button>
+            <button onclick="alert('Reed Smith 페이지에서\\n북마크 바의 📊 Extract Tariffs 클릭!')" 
+                    style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px;">
+              📊 사용법
+            </button>
+            <button onclick="this.closest('div').parentElement.parentElement.remove(); document.body.style.paddingTop = '0'" 
+                    style="background: transparent; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">
+              ✕
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.insertBefore(banner, document.body.firstChild);
+      document.body.style.paddingTop = '80px';
+      
+      if (Notification.permission === "granted") {
+        new Notification("🚨 관세 업데이트!", {
+          body: `Reed Smith 변경 감지\n${timestamp}`,
+          icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🚨</text></svg>",
+          requireInteraction: true
+        });
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission();
+      }
+    }
+  } catch (err) {
+    console.error('Update check failed:', err);
+  }
+});
+
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+`;
+document.head.appendChild(style);
+</script>
 
 </body>
 </html>
@@ -375,3 +452,4 @@ function displayResult(data) {
 2. **Admin Update 실행**
 ```
    https://tariff-rules-live.sys1107.workers.dev/admin/update?token=YOUR_TOKEN
+
