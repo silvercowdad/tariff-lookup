@@ -412,6 +412,13 @@ h1, h2 {
   color: #999;
 }
 
+.country-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
 @media (max-width: 768px) {
   .country-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -513,6 +520,15 @@ h1, h2 {
         </label>
         <div class="checkmark">✓</div>
       </div>
+
+      <div class="country-option">
+        <input type="checkbox" id="eu" value="EU">
+        <label for="eu">
+          <span class="country-flag">🇪🇺</span>
+          <span class="country-name">EU</span>
+        </label>
+        <div class="checkmark">✓</div>
+      </div>
     </div>
 
     <!-- Selection Info -->
@@ -575,7 +591,8 @@ const countryNames = {
   'MX': '🇲🇽 Mexico',
   'CA': '🇨🇦 Canada',
   'VN': '🇻🇳 Vietnam',
-  'MY': '🇲🇾 Malaysia'
+  'MY': '🇲🇾 Malaysia',
+  'EU': '🇪🇺 European Union'
 };
 
 // Track selections
@@ -942,4 +959,3 @@ document.head.appendChild(style);
 
 </body>
 </html>
-
