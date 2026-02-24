@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,6 +34,7 @@ body {
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   padding: 40px;
+  align-self: start;
 }
 
 h1, h2 {
@@ -42,76 +44,212 @@ h1, h2 {
   margin-bottom: 30px;
 }
 
-.form-group {
-  margin-bottom: 20px;
+/* Battery Type Selector */
+.battery-selector {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #444;
+.battery-option {
+  flex: 1;
 }
 
-select {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
+.battery-option input[type="radio"] {
+  display: none;
 }
 
-select:focus {
-  outline: none;
-  border-color: #667eea;
-}
-
-.checkbox-group {
+.battery-option label {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  margin-top: 12px;
-  padding: 12px;
-  background: #f8f9fa;
-  border-radius: 8px;
-}
-
-.checkbox-group input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+  padding: 20px;
+  background: white;
+  border: 3px solid #e0e0e0;
+  border-radius: 12px;
   cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
 }
 
-.checkbox-group label {
-  margin: 0;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-button {
-  width: 100%;
-  padding: 16px;
+.battery-option input[type="radio"]:checked + label {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-button:hover {
+  border-color: #667eea;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.result {
+.battery-option label:hover {
+  border-color: #667eea;
+}
+
+.battery-icon {
+  font-size: 1.8rem;
+}
+
+.battery-info {
+  text-align: left;
+}
+
+.battery-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.battery-code {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* Country Selector */
+.section-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.country-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.country-option {
+  position: relative;
+}
+
+.country-option input[type="checkbox"] {
+  display: none;
+}
+
+.country-option label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.country-option input[type="checkbox"]:checked + label {
+  background: #e7f0ff;
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.country-option label:hover {
+  border-color: #667eea;
+  transform: translateY(-1px);
+}
+
+.country-flag {
+  font-size: 1.5rem;
+}
+
+.country-name {
+  font-size: 0.95rem;
+}
+
+.checkmark {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  background: #667eea;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.75rem;
+}
+
+.country-option input[type="checkbox"]:checked ~ .checkmark {
+  display: flex;
+}
+
+/* Selection Info */
+.selection-info {
+  padding: 12px 16px;
+  background: #e7f0ff;
+  border-left: 4px solid #667eea;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.selection-info strong {
+  color: #667eea;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.btn {
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-secondary:hover {
+  background: #f8f9fa;
+}
+
+/* Results */
+.results {
   margin-top: 30px;
-  padding: 24px;
+}
+
+.result-card {
   background: #f8f9fa;
   border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
   border-left: 4px solid #667eea;
 }
 
@@ -119,96 +257,90 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
   border-bottom: 2px solid #dee2e6;
 }
 
-.result-title {
+.result-country {
   font-size: 1.2rem;
   font-weight: 700;
   color: #333;
 }
 
-.total-rate {
-  font-size: 2rem;
+.result-total {
+  font-size: 1.8rem;
   font-weight: 800;
   color: #667eea;
 }
 
-.tariff-item {
+.result-total.green { color: #28a745; }
+.result-total.yellow { color: #ffc107; }
+.result-total.orange { color: #fd7e14; }
+.result-total.red { color: #dc3545; }
+
+.result-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.result-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  margin-bottom: 8px;
+  padding: 10px 15px;
   background: white;
   border-radius: 8px;
-  border-left: 3px solid #dee2e6;
+  font-size: 0.9rem;
 }
 
-.tariff-item.MFN { border-left-color: #28a745; }
-.tariff-item.FTA { border-left-color: #17a2b8; }
-.tariff-item.SEC232 { border-left-color: #fd7e14; }
-.tariff-item.SEC301 { border-left-color: #dc3545; }
-.tariff-item.IEEPA { border-left-color: #6f42c1; }
-
-.tariff-name {
+.result-item-name {
   font-weight: 600;
   color: #333;
-  flex: 1;
 }
 
-.tariff-rate {
-  font-size: 1.2rem;
+.result-item-rate {
   font-weight: 700;
   color: #667eea;
-  margin-left: 16px;
 }
 
-.tariff-tag {
-  font-size: 0.75rem;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 600;
-  text-transform: uppercase;
-  margin-left: 12px;
-}
-
-.tariff-tag.MFN { background: #d4edda; color: #155724; }
-.tariff-tag.FTA { background: #d1ecf1; color: #0c5460; }
-.tariff-tag.SEC232 { background: #fff3cd; color: #856404; }
-.tariff-tag.SEC301 { background: #f8d7da; color: #721c24; }
-.tariff-tag.IEEPA { background: #e2d9f3; color: #4a148c; }
-
-.warnings, .exemptions {
-  margin-top: 20px;
-  padding: 16px;
-  border-radius: 8px;
-}
-
-.warnings {
-  background: #fff3cd;
-  border-left: 4px solid #ffc107;
-}
-
-.exemptions {
+.exemption-note {
+  margin-top: 12px;
+  padding: 12px;
   background: #d4edda;
-  border-left: 4px solid #28a745;
-}
-
-.item {
-  margin-bottom: 8px;
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-.metadata {
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid #dee2e6;
+  border-left: 3px solid #28a745;
+  border-radius: 6px;
   font-size: 0.85rem;
-  color: #666;
+  color: #155724;
+}
+
+/* Comparison Table */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.comparison-table th {
+  background: #f8f9fa;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.comparison-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.comparison-table tr:hover {
+  background: #f8f9fa;
+}
+
+.comparison-table tbody tr:hover {
+  background: #e7f0ff;
+  cursor: pointer;
 }
 
 .loading {
@@ -226,7 +358,7 @@ button:hover {
 }
 
 .news-list {
-  max-height: 600px;
+  max-height: none;
   overflow-y: auto;
 }
 
@@ -280,6 +412,16 @@ button:hover {
   text-align: center;
   color: #999;
 }
+
+@media (max-width: 768px) {
+  .country-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .action-buttons {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 <body>
@@ -289,40 +431,111 @@ button:hover {
   <div class="container">
     <h1>🔋 Tariff Calculator</h1>
 
-    <form id="form">
-      <div class="form-group">
-        <label for="hsCode">Battery Type</label>
-        <select id="hsCode" required>
-          <option value="">-- Select Battery Type --</option>
-          <option value="8507600010">8507.60.00.10 - EV Batteries</option>
-          <option value="8507600020">8507.60.00.20 - ESS/MPB</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="country">Country of Origin</label>
-        <select id="country" required>
-          <option value="">-- Select Country --</option>
-          <option value="CN">🇨🇳 China</option>
-          <option value="MX">🇲🇽 Mexico</option>
-          <option value="CA">🇨🇦 Canada</option>
-          <option value="KR">🇰🇷 South Korea</option>
-          <option value="MY">🇲🇾 Malaysia</option>
-          <option value="VN">🇻🇳 Vietnam</option>
-        </select>
-      </div>
-
-      <div class="checkbox-group" id="usmcaGroup" style="display:none;">
-        <input type="checkbox" id="usmcaCompliant">
-        <label for="usmcaCompliant">
-          ✅ USMCA Certificate of Origin
+    <!-- Battery Type Selector -->
+    <div class="battery-selector">
+      <div class="battery-option">
+        <input type="radio" name="battery" id="ev" value="8507600010" checked>
+        <label for="ev">
+          <span class="battery-icon">⚡</span>
+          <div class="battery-info">
+            <div class="battery-name">EV Battery</div>
+            <div class="battery-code">8507.60.00.10</div>
+          </div>
         </label>
       </div>
+      <div class="battery-option">
+        <input type="radio" name="battery" id="ess" value="8507600020">
+        <label for="ess">
+          <span class="battery-icon">🔋</span>
+          <div class="battery-info">
+            <div class="battery-name">ESS Battery</div>
+            <div class="battery-code">8507.60.00.20</div>
+          </div>
+        </label>
+      </div>
+    </div>
 
-      <button type="submit">Calculate Tariff</button>
-    </form>
+    <!-- Country Selector -->
+    <div class="section-label">
+      📍 Select Countries (Single or Multiple)
+    </div>
 
-    <div id="result" style="display:none;"></div>
+    <div class="country-grid">
+      <div class="country-option">
+        <input type="checkbox" id="cn" value="CN">
+        <label for="cn">
+          <span class="country-flag">🇨🇳</span>
+          <span class="country-name">China</span>
+        </label>
+        <div class="checkmark">✓</div>
+      </div>
+
+      <div class="country-option">
+        <input type="checkbox" id="kr" value="KR">
+        <label for="kr">
+          <span class="country-flag">🇰🇷</span>
+          <span class="country-name">Korea</span>
+        </label>
+        <div class="checkmark">✓</div>
+      </div>
+
+      <div class="country-option">
+        <input type="checkbox" id="mx" value="MX">
+        <label for="mx">
+          <span class="country-flag">🇲🇽</span>
+          <span class="country-name">Mexico</span>
+        </label>
+        <div class="checkmark">✓</div>
+      </div>
+
+      <div class="country-option">
+        <input type="checkbox" id="ca" value="CA">
+        <label for="ca">
+          <span class="country-flag">🇨🇦</span>
+          <span class="country-name">Canada</span>
+        </label>
+        <div class="checkmark">✓</div>
+      </div>
+
+      <div class="country-option">
+        <input type="checkbox" id="vn" value="VN">
+        <label for="vn">
+          <span class="country-flag">🇻🇳</span>
+          <span class="country-name">Vietnam</span>
+        </label>
+        <div class="checkmark">✓</div>
+      </div>
+
+      <div class="country-option">
+        <input type="checkbox" id="my" value="MY">
+        <label for="my">
+          <span class="country-flag">🇲🇾</span>
+          <span class="country-name">Malaysia</span>
+        </label>
+        <div class="checkmark">✓</div>
+      </div>
+    </div>
+
+    <!-- Selection Info -->
+    <div id="selectionInfo" class="selection-info" style="display: none;">
+      <strong id="selectedCount">0</strong> countries selected
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button id="selectAllBtn" class="btn btn-secondary">
+        ✓ Select All
+      </button>
+      <button id="clearBtn" class="btn btn-secondary">
+        ✕ Clear
+      </button>
+      <button id="calculateBtn" class="btn btn-primary" disabled>
+        Calculate Tariff
+      </button>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="results"></div>
   </div>
 
   <!-- 오른쪽: 뉴스 -->
@@ -334,144 +547,242 @@ button:hover {
   </div>
 </div>
 
+<footer style="
+  max-width: 1400px;
+  margin: 20px auto 0;
+  padding: 20px;
+  text-align: center;
+  color: white;
+  font-size: 0.9rem;
+  opacity: 0.95;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+">
+  <div style="margin-bottom: 8px;">
+    Built & maintained by <strong>Alan Youngsun Song</strong>
+  </div>
+  <div style="font-size: 0.85rem; opacity: 0.8;">
+    SDIA SMT | Corporate Strategy
+  </div>
+</footer>
+
 <script>
 const WORKER_URL = 'https://tariff-rules-live.sys1107.workers.dev';
 
-// Country selection handler
-document.getElementById('country').addEventListener('change', function() {
-  const country = this.value;
-  const usmcaGroup = document.getElementById('usmcaGroup');
-  
-  if (country === 'MX' || country === 'CA') {
-    usmcaGroup.style.display = 'flex';
-  } else {
-    usmcaGroup.style.display = 'none';
-    document.getElementById('usmcaCompliant').checked = false;
-  }
+const countryNames = {
+  'CN': '🇨🇳 China',
+  'KR': '🇰🇷 South Korea',
+  'MX': '🇲🇽 Mexico',
+  'CA': '🇨🇦 Canada',
+  'VN': '🇻🇳 Vietnam',
+  'MY': '🇲🇾 Malaysia'
+};
+
+// Track selections
+let selectedCountries = new Set();
+
+// Event listeners
+document.querySelectorAll('.country-option input[type="checkbox"]').forEach(checkbox => {
+  checkbox.addEventListener('change', updateSelection);
 });
 
-// Form submission
-document.getElementById('form').addEventListener('submit', async function(e) {
-  e.preventDefault();
+document.getElementById('calculateBtn').addEventListener('click', calculate);
+document.getElementById('clearBtn').addEventListener('click', clearSelection);
+document.getElementById('selectAllBtn').addEventListener('click', selectAll);
+
+function updateSelection() {
+  selectedCountries.clear();
   
-  const hsCode = document.getElementById('hsCode').value;
-  const country = document.getElementById('country').value;
-  const usmcaCompliant = document.getElementById('usmcaCompliant').checked;
+  document.querySelectorAll('.country-option input[type="checkbox"]:checked').forEach(checkbox => {
+    selectedCountries.add(checkbox.value);
+  });
   
-  if (!hsCode || !country) {
-    alert('Please select both battery type and country');
+  const count = selectedCountries.size;
+  const info = document.getElementById('selectionInfo');
+  const btn = document.getElementById('calculateBtn');
+  
+  if (count > 0) {
+    info.style.display = 'block';
+    document.getElementById('selectedCount').textContent = count;
+    btn.disabled = false;
+  } else {
+    info.style.display = 'none';
+    btn.disabled = true;
+  }
+}
+
+function clearSelection() {
+  document.querySelectorAll('.country-option input[type="checkbox"]').forEach(checkbox => {
+    checkbox.checked = false;
+  });
+  selectedCountries.clear();
+  updateSelection();
+  document.getElementById('results').innerHTML = '';
+}
+
+function selectAll() {
+  document.querySelectorAll('.country-option input[type="checkbox"]').forEach(checkbox => {
+    checkbox.checked = true;
+  });
+  updateSelection();
+}
+
+function getRateClass(total) {
+  if (total === 0) return 'green';
+  if (total < 20) return 'yellow';
+  if (total < 40) return 'orange';
+  return 'red';
+}
+
+async function calculate() {
+  const batteryType = document.querySelector('input[name="battery"]:checked').value;
+  const resultsDiv = document.getElementById('results');
+  
+  if (selectedCountries.size === 0) {
+    resultsDiv.innerHTML = '<div style="text-align: center; color: #999; padding: 40px;">Please select at least one country</div>';
     return;
   }
   
-  const resultDiv = document.getElementById('result');
-  resultDiv.style.display = 'block';
-  resultDiv.innerHTML = '<div class="loading">⏳ Calculating...</div>';
+  resultsDiv.innerHTML = '<div class="loading">⏳ Calculating...</div>';
   
   try {
-    const url = `${WORKER_URL}/calculate?hs=${hsCode}&country=${country}&usmca=${usmcaCompliant}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    const results = [];
     
-    if (data.error) {
-      throw new Error(data.error);
+    for (const country of selectedCountries) {
+      const url = `${WORKER_URL}/calculate?hs=${batteryType}&country=${country}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      results.push({ country, data });
     }
     
-    displayResult(data);
+    displayResults(results);
     
   } catch (err) {
-    resultDiv.innerHTML = `
-      <div class="result">
+    resultsDiv.innerHTML = `
+      <div class="result-card">
         <div style="color: #dc3545; font-weight: 600;">
           ❌ Error: ${err.message}
         </div>
       </div>
     `;
   }
-});
+}
 
-function displayResult(data) {
-  const resultDiv = document.getElementById('result');
+function displayResults(results) {
+  const resultsDiv = document.getElementById('results');
   
-  const countryNames = {
-    CN: '🇨🇳 China',
-    MX: '🇲🇽 Mexico',
-    CA: '🇨🇦 Canada',
-    KR: '🇰🇷 South Korea',
-    MY: '🇲🇾 Malaysia',
-    VN: '🇻🇳 Vietnam',
-  };
+  // Sort by total rate
+  const sorted = results.sort((a, b) => {
+    return a.data.total - b.data.total;
+  });
   
-  const batteryTypes = {
-    '8507600010': 'EV Batteries',
-    '8507600020': 'ESS/MPB Batteries',
-  };
+  let html = '';
   
-  let html = `
-    <div class="result">
-      <div class="result-header">
-        <div class="result-title">
-          ${batteryTypes[data.hsCode] || data.description}<br>
-          <small style="font-size:0.8rem;color:#666;">
-            HS ${data.hsCode} from ${countryNames[data.country] || data.country}
-          </small>
+  // Single country - detailed view
+  if (results.length === 1) {
+    const { country, data } = sorted[0];
+    const rateClass = getRateClass(data.total);
+    
+    html = `
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-country">${countryNames[country]}</div>
+          <div class="result-total ${rateClass}">${(data.total * 100).toFixed(1)}%</div>
         </div>
-        <div class="total-rate">${(data.total * 100).toFixed(1)}%</div>
-      </div>
-  `;
-  
-  if (data.items && data.items.length > 0) {
-    html += '<div>';
-    for (const item of data.items) {
-      html += `
-        <div class="tariff-item ${item.tag}">
-          <div style="flex:1;">
-            <div class="tariff-name">✓ ${item.name}</div>
+        
+        ${data.items && data.items.length > 0 ? `
+          <div class="result-items">
+            ${data.items.map(item => `
+              <div class="result-item">
+                <span class="result-item-name">✓ ${item.name}</span>
+                <span class="result-item-rate">${(item.rate * 100).toFixed(1)}%</span>
+              </div>
+            `).join('')}
           </div>
-          <div class="tariff-rate">${(item.rate * 100).toFixed(1)}%</div>
-          <div class="tariff-tag ${item.tag}">${item.tag}</div>
-        </div>
-      `;
-    }
-    html += '</div>';
-  }
-  
-  if (data.warnings && data.warnings.length > 0) {
-    html += '<div class="warnings">';
-    for (const w of data.warnings) {
-      html += `<div class="item">${w}</div>`;
-    }
-    html += '</div>';
-  }
-  
-  if (data.exemptions && data.exemptions.length > 0) {
-    html += '<div class="exemptions">';
-    for (const e of data.exemptions) {
-      html += `<div class="item">${e}</div>`;
-    }
-    html += '</div>';
-  }
-  
-  if (data.metadata) {
-    html += `
-      <div class="metadata">
-        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-          <span><strong>Calculated At:</strong></span>
-          <span>${new Date(data.metadata.calculatedAt).toLocaleString()}</span>
-        </div>
-        <div style="display:flex; justify-content:space-between;">
-          <span><strong>Rules Version:</strong></span>
-          <span>${data.metadata.rulesVersion}</span>
-        </div>
+        ` : '<div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>'}
+        
+        ${data.exemptions && data.exemptions.length > 0 ? `
+          <div class="exemption-note">
+            ${data.exemptions.join('<br>')}
+          </div>
+        ` : ''}
+        
+        ${(country === 'MX' || country === 'CA') ? `
+          <div class="exemption-note" style="background: #fff3cd; border-left-color: #fd7e14; color: #856404; margin-top: 12px;">
+            ⚠️ Without USMCA Certificate of Origin: ${country === 'MX' ? (data.total === 0 ? (data.hsCode === '8507600010' ? '28.4%' : '13.4%') : data.total + '%') : (data.total === 0 ? (data.hsCode === '8507600010' ? '28.4%' : '13.4%') : data.total + '%')}
+          </div>
+        ` : ''}
       </div>
     `;
+  } 
+  // Multiple countries - comparison table
+  else {
+    html = '<h3 style="margin-bottom: 15px; color: #333;">📊 Comparison Results</h3>';
+    html += '<table class="comparison-table"><thead><tr><th>Country</th><th>Total Tariff</th></tr></thead><tbody>';
+    
+    sorted.forEach(({ country, data }) => {
+      const rateClass = getRateClass(data.total);
+      
+      html += `
+        <tr onclick="toggleCountryDetails('${country}')" style="cursor: pointer;">
+          <td style="font-weight: 600;">${countryNames[country]}</td>
+          <td><span class="result-total ${rateClass}" style="font-size: 1.3rem;">${(data.total * 100).toFixed(1)}%</span></td>
+        </tr>
+        <tr id="details-${country}" style="display: none;">
+          <td colspan="2" style="padding: 0;">
+            <div style="padding: 20px; background: #f8f9fa; border-left: 4px solid #667eea;">
+              ${data.items && data.items.length > 0 ? `
+                <div class="result-items">
+                  ${data.items.map(item => `
+                    <div class="result-item">
+                      <span class="result-item-name">✓ ${item.name}</span>
+                      <span class="result-item-rate">${(item.rate * 100).toFixed(1)}%</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : '<div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>'}
+              
+              ${data.exemptions && data.exemptions.length > 0 ? `
+                <div class="exemption-note">
+                  ${data.exemptions.join('<br>')}
+                </div>
+              ` : ''}
+              
+              ${(country === 'MX' || country === 'CA') ? `
+                <div class="exemption-note" style="background: #fff3cd; border-left-color: #fd7e14; color: #856404; margin-top: 12px;">
+                  ⚠️ Without USMCA Certificate of Origin: ${data.total === 0 ? (data.items.hsCode === '8507600010' ? '28.4%' : '13.4%') : (data.total * 100).toFixed(1) + '%'}
+                </div>
+              ` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+    
+    html += '</tbody></table>';
   }
   
-  html += '</div>';
-  resultDiv.innerHTML = html;
+  resultsDiv.innerHTML = html;
+}
+
+function toggleCountryDetails(country) {
+  const detailsRow = document.getElementById(`details-${country}`);
+  
+  if (detailsRow.style.display === 'none') {
+    detailsRow.style.display = 'table-row';
+  } else {
+    detailsRow.style.display = 'none';
+  }
 }
 
 // ===================================================================
-// 🆕 뉴스 로드
+// 뉴스 로드
 // ===================================================================
 async function loadNews() {
   try {
@@ -603,31 +914,5 @@ style.textContent = `
 document.head.appendChild(style);
 </script>
 
-<footer style="
-  max-width: 1400px;
-  margin: 20px auto 0;
-  padding: 20px;
-  text-align: center;
-  color: white;
-  font-size: 0.9rem;
-  opacity: 0.95;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-">
-  <div style="margin-bottom: 8px;">
-    Built & maintained by <strong>Alan Youngsun Song</strong>
-  </div>
-  <div style="font-size: 0.85rem; opacity: 0.8;">
-    SDIA SMT | Corporate Strategy
-  </div>
-</footer>
-  
 </body>
 </html>
-
-
-
-
-
-
