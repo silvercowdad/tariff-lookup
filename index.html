@@ -738,7 +738,7 @@ function displayResults(results) {
   // Multiple countries - comparison table
   else {
     html = '<h3 style="margin-bottom: 15px; color: #333;">📊 Comparison Results</h3>';
-    html += '<table class="comparison-table"><thead><tr><th>Country</th><th>Total Tariff</th></tr></thead><tbody>';
+    html += '<table class="comparison-table"><thead><tr><th>Country of Origin</th><th>Total Tariff</th></tr></thead><tbody>';
     
     sorted.forEach(({ country, data }) => {
       // 멕시코/캐나다는 USMCA 적용 0%로 표시
@@ -942,3 +942,4 @@ document.head.appendChild(style);
 
 </body>
 </html>
+
