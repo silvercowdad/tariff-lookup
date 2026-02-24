@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -271,13 +270,13 @@ h1, h2 {
 .result-total {
   font-size: 1.8rem;
   font-weight: 800;
-  color: #667eea;
+  color: #333;
 }
 
-.result-total.green { color: #28a745; }
-.result-total.yellow { color: #ffc107; }
-.result-total.orange { color: #fd7e14; }
-.result-total.red { color: #dc3545; }
+.result-total.green { color: #333; }
+.result-total.yellow { color: #333; }
+.result-total.orange { color: #333; }
+.result-total.red { color: #333; }
 
 .result-items {
   display: flex;
@@ -687,16 +686,31 @@ function displayResults(results) {
   // Single country - detailed view
   if (results.length === 1) {
     const { country, data } = sorted[0];
-    const rateClass = getRateClass(data.total);
+    
+    // 멕시코/캐나다는 USMCA 적용 0%로 표시
+    let displayTotal = data.total;
+    let nonUsmcaRate = null;
+    
+    if (country === 'MX' || country === 'CA') {
+      nonUsmcaRate = data.total; // 원래 관세율 저장
+      displayTotal = 0; // USMCA 적용 0%로 표시
+    }
+    
+    const rateClass = getRateClass(displayTotal);
     
     html = `
       <div class="result-card">
         <div class="result-header">
           <div class="result-country">${countryNames[country]}</div>
-          <div class="result-total ${rateClass}">${(data.total * 100).toFixed(1)}%</div>
+          <div class="result-total" style="color: #333;">${(displayTotal * 100).toFixed(1)}%</div>
         </div>
         
-        ${data.items && data.items.length > 0 ? `
+        ${displayTotal === 0 && (country === 'MX' || country === 'CA') ? `
+          <div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>
+          <div class="exemption-note">
+            ✅ USMCA: All measures WAIVED
+          </div>
+        ` : (data.items && data.items.length > 0 ? `
           <div class="result-items">
             ${data.items.map(item => `
               <div class="result-item">
@@ -705,17 +719,17 @@ function displayResults(results) {
               </div>
             `).join('')}
           </div>
-        ` : '<div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>'}
+        ` : '<div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>')}
         
-        ${data.exemptions && data.exemptions.length > 0 ? `
+        ${data.exemptions && data.exemptions.length > 0 && !(country === 'MX' || country === 'CA') ? `
           <div class="exemption-note">
             ${data.exemptions.join('<br>')}
           </div>
         ` : ''}
         
-        ${(country === 'MX' || country === 'CA') ? `
+        ${(country === 'MX' || country === 'CA') && nonUsmcaRate > 0 ? `
           <div class="exemption-note" style="background: #fff3cd; border-left-color: #fd7e14; color: #856404; margin-top: 12px;">
-            ⚠️ Without USMCA Certificate of Origin: ${country === 'MX' ? (data.total === 0 ? (data.hsCode === '8507600010' ? '28.4%' : '13.4%') : data.total + '%') : (data.total === 0 ? (data.hsCode === '8507600010' ? '28.4%' : '13.4%') : data.total + '%')}
+            ⚠️ Without USMCA Certificate of Origin: ${(nonUsmcaRate * 100).toFixed(1)}%
           </div>
         ` : ''}
       </div>
@@ -727,17 +741,29 @@ function displayResults(results) {
     html += '<table class="comparison-table"><thead><tr><th>Country</th><th>Total Tariff</th></tr></thead><tbody>';
     
     sorted.forEach(({ country, data }) => {
-      const rateClass = getRateClass(data.total);
+      // 멕시코/캐나다는 USMCA 적용 0%로 표시
+      let displayTotal = data.total;
+      let nonUsmcaRate = null;
+      
+      if (country === 'MX' || country === 'CA') {
+        nonUsmcaRate = data.total;
+        displayTotal = 0;
+      }
       
       html += `
         <tr onclick="toggleCountryDetails('${country}')" style="cursor: pointer;">
           <td style="font-weight: 600;">${countryNames[country]}</td>
-          <td><span class="result-total ${rateClass}" style="font-size: 1.3rem;">${(data.total * 100).toFixed(1)}%</span></td>
+          <td><span style="font-size: 1.3rem; font-weight: 800; color: #333;">${(displayTotal * 100).toFixed(1)}%</span></td>
         </tr>
         <tr id="details-${country}" style="display: none;">
           <td colspan="2" style="padding: 0;">
             <div style="padding: 20px; background: #f8f9fa; border-left: 4px solid #667eea;">
-              ${data.items && data.items.length > 0 ? `
+              ${displayTotal === 0 && (country === 'MX' || country === 'CA') ? `
+                <div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>
+                <div class="exemption-note">
+                  ✅ USMCA: All measures WAIVED
+                </div>
+              ` : (data.items && data.items.length > 0 ? `
                 <div class="result-items">
                   ${data.items.map(item => `
                     <div class="result-item">
@@ -746,17 +772,17 @@ function displayResults(results) {
                     </div>
                   `).join('')}
                 </div>
-              ` : '<div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>'}
+              ` : '<div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>')}
               
-              ${data.exemptions && data.exemptions.length > 0 ? `
+              ${data.exemptions && data.exemptions.length > 0 && !(country === 'MX' || country === 'CA') ? `
                 <div class="exemption-note">
                   ${data.exemptions.join('<br>')}
                 </div>
               ` : ''}
               
-              ${(country === 'MX' || country === 'CA') ? `
+              ${(country === 'MX' || country === 'CA') && nonUsmcaRate > 0 ? `
                 <div class="exemption-note" style="background: #fff3cd; border-left-color: #fd7e14; color: #856404; margin-top: 12px;">
-                  ⚠️ Without USMCA Certificate of Origin: ${data.total === 0 ? (data.items.hsCode === '8507600010' ? '28.4%' : '13.4%') : (data.total * 100).toFixed(1) + '%'}
+                  ⚠️ Without USMCA Certificate of Origin: ${(nonUsmcaRate * 100).toFixed(1)}%
                 </div>
               ` : ''}
             </div>
