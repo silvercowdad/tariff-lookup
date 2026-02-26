@@ -12,7 +12,7 @@ body {
   min-height: 100vh;
   padding: 20px;
 }
-
+ 
 /* 2분할 컨테이너 */
 .main-grid {
   max-width: 1400px;
@@ -21,13 +21,13 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
-
+ 
 @media (max-width: 1024px) {
   .main-grid {
     grid-template-columns: 1fr;
   }
 }
-
+ 
 .container, .news-container {
   background: white;
   border-radius: 16px;
@@ -35,29 +35,29 @@ body {
   padding: 40px;
   align-self: start;
 }
-
+ 
 h1, h2 {
   font-size: 1.8rem;
   color: #667eea;
   text-align: center;
   margin-bottom: 30px;
 }
-
+ 
 /* Battery Type Selector */
 .battery-selector {
   display: flex;
   gap: 15px;
   margin-bottom: 30px;
 }
-
+ 
 .battery-option {
   flex: 1;
 }
-
+ 
 .battery-option input[type="radio"] {
   display: none;
 }
-
+ 
 .battery-option label {
   display: flex;
   align-items: center;
@@ -71,7 +71,7 @@ h1, h2 {
   transition: all 0.3s;
   text-align: center;
 }
-
+ 
 .battery-option input[type="radio"]:checked + label {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -79,30 +79,30 @@ h1, h2 {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
-
+ 
 .battery-option label:hover {
   border-color: #667eea;
 }
-
+ 
 .battery-icon {
   font-size: 1.8rem;
 }
-
+ 
 .battery-info {
   text-align: left;
 }
-
+ 
 .battery-name {
   font-weight: 700;
   font-size: 1.1rem;
   margin-bottom: 4px;
 }
-
+ 
 .battery-code {
   font-size: 0.85rem;
   opacity: 0.8;
 }
-
+ 
 /* Country Selector */
 .section-label {
   font-size: 1rem;
@@ -113,22 +113,22 @@ h1, h2 {
   align-items: center;
   gap: 8px;
 }
-
+ 
 .country-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-bottom: 25px;
 }
-
+ 
 .country-option {
   position: relative;
 }
-
+ 
 .country-option input[type="checkbox"] {
   display: none;
 }
-
+ 
 .country-option label {
   display: flex;
   align-items: center;
@@ -141,26 +141,26 @@ h1, h2 {
   transition: all 0.2s;
   font-weight: 600;
 }
-
+ 
 .country-option input[type="checkbox"]:checked + label {
   background: #e7f0ff;
   border-color: #667eea;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
 }
-
+ 
 .country-option label:hover {
   border-color: #667eea;
   transform: translateY(-1px);
 }
-
+ 
 .country-flag {
   font-size: 1.5rem;
 }
-
+ 
 .country-name {
   font-size: 0.95rem;
 }
-
+ 
 .checkmark {
   position: absolute;
   top: 8px;
@@ -175,11 +175,11 @@ h1, h2 {
   color: white;
   font-size: 0.75rem;
 }
-
+ 
 .country-option input[type="checkbox"]:checked ~ .checkmark {
   display: flex;
 }
-
+ 
 /* Selection Info */
 .selection-info {
   padding: 12px 16px;
@@ -190,11 +190,11 @@ h1, h2 {
   font-size: 0.9rem;
   color: #333;
 }
-
+ 
 .selection-info strong {
   color: #667eea;
 }
-
+ 
 /* Action Buttons */
 .action-buttons {
   display: grid;
@@ -202,7 +202,7 @@ h1, h2 {
   gap: 12px;
   margin-bottom: 30px;
 }
-
+ 
 .btn {
   padding: 16px;
   border: none;
@@ -212,38 +212,38 @@ h1, h2 {
   cursor: pointer;
   transition: all 0.2s;
 }
-
+ 
 .btn-primary {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }
-
+ 
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
-
+ 
 .btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
-
+ 
 .btn-secondary {
   background: white;
   color: #667eea;
   border: 2px solid #667eea;
 }
-
+ 
 .btn-secondary:hover {
   background: #f8f9fa;
 }
-
+ 
 /* Results */
 .results {
   margin-top: 30px;
 }
-
+ 
 .result-card {
   background: #f8f9fa;
   border-radius: 12px;
@@ -251,7 +251,7 @@ h1, h2 {
   margin-bottom: 15px;
   border-left: 4px solid #667eea;
 }
-
+ 
 .result-header {
   display: flex;
   justify-content: space-between;
@@ -260,30 +260,25 @@ h1, h2 {
   padding-bottom: 15px;
   border-bottom: 2px solid #dee2e6;
 }
-
+ 
 .result-country {
   font-size: 1.2rem;
   font-weight: 700;
   color: #333;
 }
-
+ 
 .result-total {
   font-size: 1.8rem;
   font-weight: 800;
   color: #333;
 }
-
-.result-total.green { color: #333; }
-.result-total.yellow { color: #333; }
-.result-total.orange { color: #333; }
-.result-total.red { color: #333; }
-
+ 
 .result-items {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-
+ 
 .result-item {
   display: flex;
   justify-content: space-between;
@@ -292,17 +287,17 @@ h1, h2 {
   border-radius: 8px;
   font-size: 0.9rem;
 }
-
+ 
 .result-item-name {
   font-weight: 600;
   color: #333;
 }
-
+ 
 .result-item-rate {
   font-weight: 700;
   color: #667eea;
 }
-
+ 
 .exemption-note {
   margin-top: 12px;
   padding: 12px;
@@ -312,14 +307,14 @@ h1, h2 {
   font-size: 0.85rem;
   color: #155724;
 }
-
+ 
 /* Comparison Table */
 .comparison-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
 }
-
+ 
 .comparison-table th {
   background: #f8f9fa;
   padding: 12px;
@@ -327,40 +322,40 @@ h1, h2 {
   font-weight: 600;
   border-bottom: 2px solid #dee2e6;
 }
-
+ 
 .comparison-table td {
   padding: 12px;
   border-bottom: 1px solid #e9ecef;
 }
-
+ 
 .comparison-table tr:hover {
   background: #f8f9fa;
 }
-
+ 
 .comparison-table tbody tr:hover {
   background: #e7f0ff;
   cursor: pointer;
 }
-
+ 
 .loading {
   text-align: center;
   padding: 20px;
   color: #667eea;
   font-weight: 600;
 }
-
+ 
 /* 뉴스 스타일 */
 .news-container h2 {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
+ 
 .news-list {
   max-height: none;
   overflow-y: auto;
 }
-
+ 
 .news-item {
   padding: 15px;
   margin-bottom: 12px;
@@ -369,30 +364,30 @@ h1, h2 {
   border-left: 4px solid #667eea;
   transition: all 0.2s;
 }
-
+ 
 .news-item:hover {
   transform: translateX(5px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-
+ 
 .news-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
-
+ 
 .news-source {
   font-weight: 700;
   font-size: 0.85rem;
   color: #667eea;
 }
-
+ 
 .news-date {
   font-size: 0.85rem;
   color: #999;
 }
-
+ 
 .news-title {
   display: block;
   color: #333;
@@ -401,42 +396,126 @@ h1, h2 {
   font-size: 0.95rem;
   line-height: 1.5;
 }
-
+ 
 .news-title:hover {
   color: #667eea;
 }
-
+ 
 .news-empty {
   padding: 40px 20px;
   text-align: center;
   color: #999;
 }
-
-.country-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 25px;
-}
-
+ 
 @media (max-width: 768px) {
   .country-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+ 
   .action-buttons {
     grid-template-columns: 1fr;
   }
 }
+ 
+/* ===== GAME MODAL STYLES ===== */
+#gameModal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+#gameModal.open {
+  display: flex;
+}
+.game-wrapper {
+  background: #1a1a2e;
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+  max-width: 660px;
+  width: 95%;
+  box-shadow: 0 0 60px rgba(102,126,234,0.5);
+  border: 2px solid #667eea;
+}
+.game-title {
+  text-align: center;
+  color: #FFD700;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 15px rgba(255,215,0,0.6);
+}
+.game-hint {
+  text-align: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.8rem;
+  margin-bottom: 12px;
+}
+#gameCanvas {
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px;
+  border: 2px solid #667eea;
+}
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+.game-btn {
+  padding: 8px 22px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.game-btn-restart {
+  background: #FFD700;
+  color: #333;
+}
+.game-btn-restart:hover {
+  background: #FFC107;
+  transform: translateY(-2px);
+}
+.game-btn-close {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.game-btn-close:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+ 
+/* Strategy link in footer */
+.strategy-link {
+  cursor: pointer;
+  color: #FFD700;
+  text-decoration: none;
+  transition: all 0.2s;
+  border-bottom: 1px dashed rgba(255,215,0,0.5);
+}
+.strategy-link:hover {
+  color: #FFF;
+  border-bottom-color: #FFF;
+}
 </style>
 </head>
 <body>
-
+ 
 <div class="main-grid">
   <!-- 왼쪽: 계산기 -->
   <div class="container">
     <h1>🔋 Tariff Calculator</h1>
-
+ 
     <!-- Battery Type Selector -->
     <div class="battery-selector">
       <div class="battery-option">
@@ -460,12 +539,12 @@ h1, h2 {
         </label>
       </div>
     </div>
-
+ 
     <!-- Country Selector -->
     <div class="section-label">
       📍 Select Countries (Single or Multiple)
     </div>
-
+ 
     <div class="country-grid">
       <div class="country-option">
         <input type="checkbox" id="cn" value="CN">
@@ -475,7 +554,7 @@ h1, h2 {
         </label>
         <div class="checkmark">✓</div>
       </div>
-
+ 
       <div class="country-option">
         <input type="checkbox" id="kr" value="KR">
         <label for="kr">
@@ -484,7 +563,7 @@ h1, h2 {
         </label>
         <div class="checkmark">✓</div>
       </div>
-
+ 
       <div class="country-option">
         <input type="checkbox" id="mx" value="MX">
         <label for="mx">
@@ -493,7 +572,7 @@ h1, h2 {
         </label>
         <div class="checkmark">✓</div>
       </div>
-
+ 
       <div class="country-option">
         <input type="checkbox" id="ca" value="CA">
         <label for="ca">
@@ -502,7 +581,7 @@ h1, h2 {
         </label>
         <div class="checkmark">✓</div>
       </div>
-
+ 
       <div class="country-option">
         <input type="checkbox" id="vn" value="VN">
         <label for="vn">
@@ -511,7 +590,7 @@ h1, h2 {
         </label>
         <div class="checkmark">✓</div>
       </div>
-
+ 
       <div class="country-option">
         <input type="checkbox" id="my" value="MY">
         <label for="my">
@@ -520,7 +599,7 @@ h1, h2 {
         </label>
         <div class="checkmark">✓</div>
       </div>
-
+ 
       <div class="country-option">
         <input type="checkbox" id="eu" value="EU">
         <label for="eu">
@@ -530,12 +609,12 @@ h1, h2 {
         <div class="checkmark">✓</div>
       </div>
     </div>
-
+ 
     <!-- Selection Info -->
     <div id="selectionInfo" class="selection-info" style="display: none;">
       <strong id="selectedCount">0</strong> countries selected
     </div>
-
+ 
     <!-- Action Buttons -->
     <div class="action-buttons">
       <button id="selectAllBtn" class="btn btn-secondary">
@@ -548,11 +627,11 @@ h1, h2 {
         Calculate Tariff
       </button>
     </div>
-
+ 
     <!-- Results -->
     <div id="results" class="results"></div>
   </div>
-
+ 
   <!-- 오른쪽: 뉴스 -->
   <div class="news-container">
     <h2>📰 Trade News</h2>
@@ -561,7 +640,7 @@ h1, h2 {
     </div>
   </div>
 </div>
-
+ 
 <footer style="
   max-width: 1400px;
   margin: 20px auto 0;
@@ -575,16 +654,29 @@ h1, h2 {
   backdrop-filter: blur(10px);
 ">
   <div style="margin-bottom: 8px;">
-    Built & maintained by <strong>Alan Youngsun Song</strong>
+    Built &amp; maintained by <strong>Alan Youngsun Song</strong>
   </div>
   <div style="font-size: 0.85rem; opacity: 0.8;">
-    SDIA SMT | Corporate Strategy
+    SDIA SMT | Corporate <span class="strategy-link" onclick="openGame()" title="Click for a surprise!">Strategy</span>
   </div>
 </footer>
-
+ 
+<!-- ===== PIKACHU VOLLEYBALL GAME MODAL ===== -->
+<div id="gameModal">
+  <div class="game-wrapper">
+    <div class="game-title">⚡ PIKACHU VOLLEYBALL ⚡</div>
+    <div class="game-hint">← → Move &nbsp;|&nbsp; ↑ Jump &nbsp;|&nbsp; First to 7 wins!</div>
+    <canvas id="gameCanvas" width="620" height="400"></canvas>
+    <div class="game-controls">
+      <button class="game-btn game-btn-restart" onclick="restartGame()">Restart</button>
+      <button class="game-btn game-btn-close" onclick="closeGame()">Close</button>
+    </div>
+  </div>
+</div>
+ 
 <script>
 const WORKER_URL = 'https://tariff-rules-live.sys1107.workers.dev';
-
+ 
 const countryNames = {
   'CN': '🇨🇳 China',
   'KR': '🇰🇷 South Korea',
@@ -594,30 +686,25 @@ const countryNames = {
   'MY': '🇲🇾 Malaysia',
   'EU': '🇪🇺 European Union'
 };
-
-// Track selections
+ 
 let selectedCountries = new Set();
-
-// Event listeners
+ 
 document.querySelectorAll('.country-option input[type="checkbox"]').forEach(checkbox => {
   checkbox.addEventListener('change', updateSelection);
 });
-
+ 
 document.getElementById('calculateBtn').addEventListener('click', calculate);
 document.getElementById('clearBtn').addEventListener('click', clearSelection);
 document.getElementById('selectAllBtn').addEventListener('click', selectAll);
-
+ 
 function updateSelection() {
   selectedCountries.clear();
-  
   document.querySelectorAll('.country-option input[type="checkbox"]:checked').forEach(checkbox => {
     selectedCountries.add(checkbox.value);
   });
-  
   const count = selectedCountries.size;
   const info = document.getElementById('selectionInfo');
   const btn = document.getElementById('calculateBtn');
-  
   if (count > 0) {
     info.style.display = 'block';
     document.getElementById('selectedCount').textContent = count;
@@ -627,7 +714,7 @@ function updateSelection() {
     btn.disabled = true;
   }
 }
-
+ 
 function clearSelection() {
   document.querySelectorAll('.country-option input[type="checkbox"]').forEach(checkbox => {
     checkbox.checked = false;
@@ -636,97 +723,58 @@ function clearSelection() {
   updateSelection();
   document.getElementById('results').innerHTML = '';
 }
-
+ 
 function selectAll() {
   document.querySelectorAll('.country-option input[type="checkbox"]').forEach(checkbox => {
     checkbox.checked = true;
   });
   updateSelection();
 }
-
-function getRateClass(total) {
-  if (total === 0) return 'green';
-  if (total < 20) return 'yellow';
-  if (total < 40) return 'orange';
-  return 'red';
-}
-
+ 
 async function calculate() {
   const batteryType = document.querySelector('input[name="battery"]:checked').value;
   const resultsDiv = document.getElementById('results');
-  
   if (selectedCountries.size === 0) {
     resultsDiv.innerHTML = '<div style="text-align: center; color: #999; padding: 40px;">Please select at least one country</div>';
     return;
   }
-  
   resultsDiv.innerHTML = '<div class="loading">⏳ Calculating...</div>';
-  
   try {
     const results = [];
-    
     for (const country of selectedCountries) {
       const url = `${WORKER_URL}/calculate?hs=${batteryType}&country=${country}`;
       const res = await fetch(url);
       const data = await res.json();
-      
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      
+      if (data.error) throw new Error(data.error);
       results.push({ country, data });
     }
-    
     displayResults(results);
-    
   } catch (err) {
-    resultsDiv.innerHTML = `
-      <div class="result-card">
-        <div style="color: #dc3545; font-weight: 600;">
-          ❌ Error: ${err.message}
-        </div>
-      </div>
-    `;
+    resultsDiv.innerHTML = `<div class="result-card"><div style="color: #dc3545; font-weight: 600;">❌ Error: ${err.message}</div></div>`;
   }
 }
-
+ 
 function displayResults(results) {
   const resultsDiv = document.getElementById('results');
-  
-  // Sort by total rate
-  const sorted = results.sort((a, b) => {
-    return a.data.total - b.data.total;
-  });
-  
+  const sorted = results.sort((a, b) => a.data.total - b.data.total);
   let html = '';
-  
-  // Single country - detailed view
   if (results.length === 1) {
     const { country, data } = sorted[0];
-    
-    // 멕시코/캐나다는 USMCA 적용 0%로 표시
     let displayTotal = data.total;
     let nonUsmcaRate = null;
-    
     if (country === 'MX' || country === 'CA') {
-      nonUsmcaRate = data.total; // 원래 관세율 저장
-      displayTotal = 0; // USMCA 적용 0%로 표시
+      nonUsmcaRate = data.total;
+      displayTotal = 0;
     }
-    
-    const rateClass = getRateClass(displayTotal);
-    
     html = `
       <div class="result-card">
         <div class="result-header">
           <div class="result-country">${countryNames[country]}</div>
           <div class="result-total" style="color: #333;">${(displayTotal * 100).toFixed(1)}%</div>
         </div>
-        
         ${displayTotal === 0 && (country === 'MX' || country === 'CA') ? `
           <div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>
-          <div class="exemption-note">
-            ✅ USMCA: All measures WAIVED
-          </div>
+          <div class="exemption-note">✅ USMCA: All measures WAIVED</div>
         ` : (data.items && data.items.length > 0 ? `
           <div class="result-items">
             ${data.items.map(item => `
@@ -737,13 +785,9 @@ function displayResults(results) {
             `).join('')}
           </div>
         ` : '<div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>')}
-        
         ${data.exemptions && data.exemptions.length > 0 && !(country === 'MX' || country === 'CA') ? `
-          <div class="exemption-note">
-            ${data.exemptions.join('<br>')}
-          </div>
+          <div class="exemption-note">${data.exemptions.join('<br>')}</div>
         ` : ''}
-        
         ${(country === 'MX' || country === 'CA') && nonUsmcaRate > 0 ? `
           <div class="exemption-note" style="background: #fff3cd; border-left-color: #fd7e14; color: #856404; margin-top: 12px;">
             ⚠️ Without USMCA Certificate of Origin: ${(nonUsmcaRate * 100).toFixed(1)}%
@@ -751,22 +795,16 @@ function displayResults(results) {
         ` : ''}
       </div>
     `;
-  } 
-  // Multiple countries - comparison table
-  else {
+  } else {
     html = '<h3 style="margin-bottom: 15px; color: #333;">📊 Comparison Results</h3>';
     html += '<table class="comparison-table"><thead><tr><th>Country of Origin</th><th>Total Tariff</th></tr></thead><tbody>';
-    
     sorted.forEach(({ country, data }) => {
-      // 멕시코/캐나다는 USMCA 적용 0%로 표시
       let displayTotal = data.total;
       let nonUsmcaRate = null;
-      
       if (country === 'MX' || country === 'CA') {
         nonUsmcaRate = data.total;
         displayTotal = 0;
       }
-      
       html += `
         <tr onclick="toggleCountryDetails('${country}')" style="cursor: pointer;">
           <td style="font-weight: 600;">${countryNames[country]}</td>
@@ -777,9 +815,7 @@ function displayResults(results) {
             <div style="padding: 20px; background: #f8f9fa; border-left: 4px solid #667eea;">
               ${displayTotal === 0 && (country === 'MX' || country === 'CA') ? `
                 <div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>
-                <div class="exemption-note">
-                  ✅ USMCA: All measures WAIVED
-                </div>
+                <div class="exemption-note">✅ USMCA: All measures WAIVED</div>
               ` : (data.items && data.items.length > 0 ? `
                 <div class="result-items">
                   ${data.items.map(item => `
@@ -790,13 +826,9 @@ function displayResults(results) {
                   `).join('')}
                 </div>
               ` : '<div style="text-align: center; color: #28a745; font-weight: 600; padding: 20px;">Duty Free - No tariffs applied</div>')}
-              
               ${data.exemptions && data.exemptions.length > 0 && !(country === 'MX' || country === 'CA') ? `
-                <div class="exemption-note">
-                  ${data.exemptions.join('<br>')}
-                </div>
+                <div class="exemption-note">${data.exemptions.join('<br>')}</div>
               ` : ''}
-              
               ${(country === 'MX' || country === 'CA') && nonUsmcaRate > 0 ? `
                 <div class="exemption-note" style="background: #fff3cd; border-left-color: #fd7e14; color: #856404; margin-top: 12px;">
                   ⚠️ Without USMCA Certificate of Origin: ${(nonUsmcaRate * 100).toFixed(1)}%
@@ -807,31 +839,20 @@ function displayResults(results) {
         </tr>
       `;
     });
-    
     html += '</tbody></table>';
   }
-  
   resultsDiv.innerHTML = html;
 }
-
+ 
 function toggleCountryDetails(country) {
   const detailsRow = document.getElementById(`details-${country}`);
-  
-  if (detailsRow.style.display === 'none') {
-    detailsRow.style.display = 'table-row';
-  } else {
-    detailsRow.style.display = 'none';
-  }
+  detailsRow.style.display = detailsRow.style.display === 'none' ? 'table-row' : 'none';
 }
-
-// ===================================================================
-// 뉴스 로드
-// ===================================================================
+ 
 async function loadNews() {
   try {
     const res = await fetch(`${WORKER_URL}/news`);
     const news = await res.json();
-    
     if (!news || news.length === 0) {
       document.getElementById('news-list').innerHTML = `
         <div class="news-empty">
@@ -841,97 +862,71 @@ async function loadNews() {
       `;
       return;
     }
-    
     const html = news.map(item => {
-      const date = new Date(item.date).toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric',
-        year: 'numeric'
-      });
-      
+      const date = new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       return `
         <div class="news-item">
           <div class="news-header">
             <span class="news-source">🔵 ${item.source}</span>
             <span class="news-date">${date}</span>
           </div>
-          <a href="${item.url}" target="_blank" class="news-title">
-            ${item.title}
-          </a>
+          <a href="${item.url}" target="_blank" class="news-title">${item.title}</a>
         </div>
       `;
     }).join('');
-    
     document.getElementById('news-list').innerHTML = html;
-    
   } catch (err) {
     document.getElementById('news-list').innerHTML = `
       <div class="news-empty" style="color: #dc3545;">
-        ❌ Failed to load news<br>
-        <small>${err.message}</small>
+        ❌ Failed to load news<br><small>${err.message}</small>
       </div>
     `;
   }
 }
-
-// 페이지 로드 시 뉴스 가져오기
+ 
 loadNews();
 </script>
-
+ 
 <script>
 window.addEventListener('DOMContentLoaded', async function() {
   try {
     const res = await fetch('https://tariff-rules-live.sys1107.workers.dev/check-updates');
     const data = await res.json();
-    
     if (data.hasUpdate) {
       const timestamp = new Date(data.timestamp).toLocaleString('ko-KR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit'
       });
-      
       const banner = document.createElement('div');
       banner.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
+        position: fixed; top: 0; left: 0; right: 0;
         background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
-        color: white;
-        padding: 15px 20px;
-        text-align: center;
-        z-index: 9999;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        color: white; padding: 15px 20px; text-align: center;
+        z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         animation: slideDown 0.4s ease-out;
       `;
-      
       banner.innerHTML = `
         <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
           <strong style="font-size: 16px;">🚨 Reed Smith 업데이트 감지!</strong>
           <span style="font-size: 14px; opacity: 0.9;">변경: ${timestamp}</span>
           <div style="display: flex; gap: 10px;">
-            <button onclick="window.open('https://www.tradecompliance.reedsmith.com/trump-2-0-tariff-tracker', '_blank')" 
+            <button onclick="window.open('https://www.tradecompliance.reedsmith.com/trump-2-0-tariff-tracker', '_blank')"
                     style="background: white; color: #ff6b6b; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px;">
               📄 페이지 열기
             </button>
-            <button onclick="alert('Reed Smith 페이지에서\\n북마크 바의 📊 Extract Tariffs 클릭!')" 
+            <button onclick="alert('Reed Smith 페이지에서\\n북마크 바의 📊 Extract Tariffs 클릭!')"
                     style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px;">
               📊 사용법
             </button>
-            <button onclick="this.closest('div').parentElement.parentElement.remove(); document.body.style.paddingTop = '0'" 
+            <button onclick="this.closest('div').parentElement.parentElement.remove(); document.body.style.paddingTop = '0'"
                     style="background: transparent; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">
               ✕
             </button>
           </div>
         </div>
       `;
-      
       document.body.insertBefore(banner, document.body.firstChild);
       document.body.style.paddingTop = '80px';
-      
       if (Notification.permission === "granted") {
         new Notification("🚨 관세 업데이트!", {
           body: `Reed Smith 변경 감지\n${timestamp}`,
@@ -946,7 +941,7 @@ window.addEventListener('DOMContentLoaded', async function() {
     console.error('Update check failed:', err);
   }
 });
-
+ 
 const style = document.createElement('style');
 style.textContent = `
   @keyframes slideDown {
@@ -956,6 +951,522 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 </script>
-
+ 
+<!-- ===================================================
+     PIKACHU VOLLEYBALL GAME ENGINE
+     =================================================== -->
+<script>
+// ---- Constants ----
+const GW = 620, GH = 400;
+const GROUND = 365;
+const NET_X = GW / 2;
+const NET_W = 10;
+const NET_H = 95;
+const NET_TOP = GROUND - NET_H;
+const GRAVITY = 0.55;
+const JUMP_V = -14.5;
+const PLAYER_SPEED = 4.5;
+const CPU_SPEED = 3.8;
+const CHAR_R = 28;
+const BALL_R = 13;
+const WIN_SCORE = 7;
+ 
+// ---- Game State ----
+let canvas, ctx, raf;
+let keys = {};
+let gs; // game state
+ 
+function mkPlayer(x, isHuman) {
+  return { x, y: GROUND - CHAR_R, vy: 0, onGround: true, isHuman };
+}
+function mkBall(side) {
+  const sx = side === 'left' ? 155 : GW - 155;
+  return { x: sx, y: GROUND - 170, vx: side === 'left' ? 4 : -4, vy: -9 };
+}
+ 
+function initGame() {
+  gs = {
+    player: mkPlayer(155, true),
+    cpu: mkPlayer(GW - 155, false),
+    ball: mkBall('left'),
+    pScore: 0,
+    cScore: 0,
+    phase: 'playing', // 'playing' | 'point' | 'over'
+    phaseTimer: 0,
+    lastPoint: '',
+    winner: ''
+  };
+}
+ 
+// ---- Input ----
+function onKeyDown(e) {
+  if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key)) {
+    e.preventDefault();
+  }
+  keys[e.key] = true;
+}
+function onKeyUp(e) { keys[e.key] = false; }
+ 
+// ---- Physics helpers ----
+function applyGravity(obj) {
+  obj.vy += GRAVITY;
+  obj.y += obj.vy;
+  if (obj.y >= GROUND - CHAR_R) {
+    obj.y = GROUND - CHAR_R;
+    obj.vy = 0;
+    obj.onGround = true;
+  }
+}
+ 
+function clampX(obj, minX, maxX) {
+  obj.x = Math.max(minX + CHAR_R, Math.min(maxX - CHAR_R, obj.x));
+}
+ 
+// Net-rectangle vs circle collision
+function resolveNetBall(ball) {
+  const nl = NET_X - NET_W / 2;
+  const nr = NET_X + NET_W / 2;
+  // Find closest point on net rect to ball center
+  const cx = Math.max(nl, Math.min(ball.x, nr));
+  const cy = Math.max(NET_TOP, Math.min(ball.y, GROUND));
+  const dx = ball.x - cx, dy = ball.y - cy;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  if (dist < BALL_R && dist > 0) {
+    const nx = dx / dist, ny = dy / dist;
+    // Push ball out
+    ball.x += nx * (BALL_R - dist);
+    ball.y += ny * (BALL_R - dist);
+    // Reflect velocity
+    const dot = ball.vx * nx + ball.vy * ny;
+    if (dot < 0) {
+      ball.vx -= 2 * dot * nx * 0.75;
+      ball.vy -= 2 * dot * ny * 0.75;
+    }
+  }
+}
+ 
+// Circle vs circle bounce
+function resolveBallChar(ball, ch) {
+  const dx = ball.x - ch.x, dy = ball.y - ch.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  const minD = BALL_R + CHAR_R;
+  if (dist < minD && dist > 0) {
+    const nx = dx / dist, ny = dy / dist;
+    ball.x = ch.x + nx * minD;
+    ball.y = ch.y + ny * minD;
+    // Reflect with a boost upward
+    const dot = ball.vx * nx + ball.vy * ny;
+    ball.vx -= 2 * dot * nx;
+    ball.vy -= 2 * dot * ny;
+    // Ensure ball pops upward when hit from above
+    if (ball.vy > -2) ball.vy = -2;
+    // Cap speed
+    const spd = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+    if (spd > 14) { ball.vx *= 14 / spd; ball.vy *= 14 / spd; }
+  }
+}
+ 
+// ---- CPU AI ----
+function updateCPU(cpu, ball) {
+  cpu.vy += GRAVITY;
+  cpu.y += cpu.vy;
+  if (cpu.y >= GROUND - CHAR_R) { cpu.y = GROUND - CHAR_R; cpu.vy = 0; cpu.onGround = true; }
+ 
+  // Only act when ball is on CPU's side
+  if (ball.x > NET_X) {
+    // Predict landing x: simple approach - move to ball x
+    const targetX = ball.x;
+    const dx = targetX - cpu.x;
+    if (Math.abs(dx) > 4) cpu.x += (dx > 0 ? 1 : -1) * CPU_SPEED;
+ 
+    // Jump when ball is above and close
+    if (cpu.onGround) {
+      const distX = Math.abs(ball.x - cpu.x);
+      const ballAbove = ball.y < cpu.y - 10;
+      // Also jump proactively when ball is heading toward CPU's side
+      if ((distX < 90 && ballAbove) || (ball.vy > 0 && ball.y > GROUND - 180 && distX < 120)) {
+        cpu.vy = JUMP_V * 0.92;
+        cpu.onGround = false;
+      }
+    }
+  } else {
+    // Ball on player's side: drift back toward center of CPU half
+    const homeX = GW * 0.75;
+    const dx = homeX - cpu.x;
+    if (Math.abs(dx) > 5) cpu.x += (dx > 0 ? 1 : -1) * (CPU_SPEED * 0.5);
+  }
+ 
+  clampX(cpu, NET_X + NET_W / 2, GW);
+}
+ 
+// ---- Update ----
+function update() {
+  if (gs.phase === 'over') return;
+ 
+  if (gs.phase === 'point') {
+    gs.phaseTimer--;
+    if (gs.phaseTimer <= 0) {
+      if (gs.winner) { gs.phase = 'over'; return; }
+      gs.phase = 'playing';
+      gs.ball = mkBall(gs.lastPoint === 'player' ? 'right' : 'left');
+    }
+    return;
+  }
+ 
+  // --- Player ---
+  const p = gs.player;
+  if (keys['ArrowLeft'])  p.x -= PLAYER_SPEED;
+  if (keys['ArrowRight']) p.x += PLAYER_SPEED;
+  if (keys['ArrowUp'] && p.onGround) { p.vy = JUMP_V; p.onGround = false; }
+  applyGravity(p);
+  clampX(p, 0, NET_X - NET_W / 2);
+ 
+  // --- CPU ---
+  updateCPU(gs.cpu, gs.ball);
+ 
+  // --- Ball ---
+  const b = gs.ball;
+  b.vy += GRAVITY;
+  b.x += b.vx;
+  b.y += b.vy;
+ 
+  // Wall bounce
+  if (b.x - BALL_R < 0)    { b.x = BALL_R;      b.vx = Math.abs(b.vx) * 0.85; }
+  if (b.x + BALL_R > GW)   { b.x = GW - BALL_R; b.vx = -Math.abs(b.vx) * 0.85; }
+  if (b.y - BALL_R < 5)    { b.y = BALL_R + 5;  b.vy = Math.abs(b.vy) * 0.8; }
+ 
+  // Net collision
+  resolveNetBall(b);
+ 
+  // Character collisions
+  resolveBallChar(b, p);
+  resolveBallChar(b, gs.cpu);
+ 
+  // Score check - ball hits ground
+  if (b.y + BALL_R >= GROUND) {
+    if (b.x < NET_X) {
+      // CPU scores
+      gs.cScore++;
+      gs.lastPoint = 'cpu';
+    } else {
+      // Player scores
+      gs.pScore++;
+      gs.lastPoint = 'player';
+    }
+    gs.phase = 'point';
+    gs.phaseTimer = 100;
+    if (gs.pScore >= WIN_SCORE) gs.winner = 'player';
+    else if (gs.cScore >= WIN_SCORE) gs.winner = 'cpu';
+  }
+}
+ 
+// ---- Draw helpers ----
+function drawPikachu(ctx, x, y, facingRight) {
+  const d = facingRight ? 1 : -1;
+  const r = CHAR_R;
+ 
+  // Shadow
+  ctx.save();
+  ctx.fillStyle = 'rgba(0,0,0,0.18)';
+  ctx.beginPath();
+  ctx.ellipse(x, GROUND + 4, r * 0.75, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+ 
+  // Ears
+  ctx.fillStyle = '#F5C000';
+  // Left ear
+  ctx.beginPath();
+  ctx.moveTo(x - d * r * 0.45, y - r * 0.75);
+  ctx.lineTo(x - d * r * 0.75, y - r * 1.85);
+  ctx.lineTo(x - d * r * 0.05, y - r * 1.15);
+  ctx.closePath(); ctx.fill();
+  // Right ear
+  ctx.beginPath();
+  ctx.moveTo(x + d * r * 0.15, y - r * 0.75);
+  ctx.lineTo(x + d * r * 0.55, y - r * 1.85);
+  ctx.lineTo(x + d * r * 0.75, y - r * 1.1);
+  ctx.closePath(); ctx.fill();
+  // Ear tips black
+  ctx.fillStyle = '#222';
+  ctx.beginPath();
+  ctx.moveTo(x - d * r * 0.48, y - r * 1.45);
+  ctx.lineTo(x - d * r * 0.75, y - r * 1.85);
+  ctx.lineTo(x - d * r * 0.12, y - r * 1.6);
+  ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x + d * r * 0.25, y - r * 1.4);
+  ctx.lineTo(x + d * r * 0.55, y - r * 1.85);
+  ctx.lineTo(x + d * r * 0.72, y - r * 1.4);
+  ctx.closePath(); ctx.fill();
+ 
+  // Body
+  ctx.fillStyle = '#F5C000';
+  ctx.beginPath();
+  ctx.ellipse(x, y, r, r * 1.05, 0, 0, Math.PI * 2);
+  ctx.fill();
+ 
+  // Belly
+  ctx.fillStyle = '#FFF0A0';
+  ctx.beginPath();
+  ctx.ellipse(x + d * r * 0.08, y + r * 0.22, r * 0.48, r * 0.52, 0, 0, Math.PI * 2);
+  ctx.fill();
+ 
+  // Red cheeks
+  ctx.fillStyle = '#FF6060';
+  ctx.globalAlpha = 0.82;
+  ctx.beginPath();
+  ctx.ellipse(x - d * r * 0.62, y + r * 0.06, r * 0.24, r * 0.19, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(x + d * r * 0.62, y + r * 0.06, r * 0.24, r * 0.19, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+ 
+  // Eyes
+  ctx.fillStyle = '#111';
+  ctx.beginPath();
+  ctx.ellipse(x - d * r * 0.28, y - r * 0.18, r * 0.115, r * 0.145, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(x + d * r * 0.28, y - r * 0.18, r * 0.115, r * 0.145, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Eye shine
+  ctx.fillStyle = 'white';
+  ctx.beginPath();
+  ctx.ellipse(x - d * r * 0.23, y - r * 0.24, r * 0.05, r * 0.05, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(x + d * r * 0.33, y - r * 0.24, r * 0.05, r * 0.05, 0, 0, Math.PI * 2);
+  ctx.fill();
+ 
+  // Nose
+  ctx.fillStyle = '#444';
+  ctx.beginPath();
+  ctx.ellipse(x + d * r * 0.04, y + r * 0.01, r * 0.07, r * 0.05, 0, 0, Math.PI * 2);
+  ctx.fill();
+ 
+  // Mouth (smile)
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(x + d * r * 0.04, y + r * 0.12, r * 0.18, 0.15, Math.PI - 0.15);
+  ctx.stroke();
+  ctx.lineWidth = 1;
+ 
+  // Tail (lightning bolt shape) on outer side
+  const tx = x - d * r * 0.95;
+  ctx.strokeStyle = '#F5C000';
+  ctx.lineWidth = 4;
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(tx,         y + r * 0.55);
+  ctx.lineTo(tx - d * 8, y + r * 0.15);
+  ctx.lineTo(tx + d * 5, y - r * 0.1);
+  ctx.lineTo(tx - d * 8, y - r * 0.45);
+  ctx.stroke();
+  ctx.lineWidth = 1;
+}
+ 
+function drawVolleyball(ctx, x, y) {
+  // Shadow
+  const groundDist = GROUND - y;
+  const shadowAlpha = Math.max(0.05, 0.25 - groundDist * 0.0005);
+  ctx.fillStyle = `rgba(0,0,0,${shadowAlpha})`;
+  ctx.beginPath();
+  ctx.ellipse(x, GROUND + 4, BALL_R * 0.9, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+ 
+  // Ball base
+  ctx.fillStyle = '#FFFDE7';
+  ctx.beginPath();
+  ctx.arc(x, y, BALL_R, 0, Math.PI * 2);
+  ctx.fill();
+ 
+  // Volleyball seams
+  ctx.strokeStyle = 'rgba(100,60,0,0.55)';
+  ctx.lineWidth = 1.5;
+  // Vertical curve
+  ctx.beginPath();
+  ctx.arc(x - BALL_R * 0.3, y, BALL_R * 1.1, -Math.PI * 0.45, Math.PI * 0.45);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(x + BALL_R * 0.3, y, BALL_R * 1.1, Math.PI * 0.55, Math.PI * 1.45);
+  ctx.stroke();
+  // Horizontal curve
+  ctx.beginPath();
+  ctx.arc(x, y + BALL_R * 0.3, BALL_R * 1.1, -Math.PI * 0.45 - Math.PI/2, Math.PI * 0.45 - Math.PI/2);
+  ctx.stroke();
+  ctx.lineWidth = 1;
+}
+ 
+function drawNet(ctx) {
+  const nl = NET_X - NET_W / 2;
+ 
+  // Net post
+  ctx.fillStyle = '#B0B0B0';
+  ctx.fillRect(nl - 2, NET_TOP - 8, NET_W + 4, GROUND - NET_TOP + 8);
+ 
+  // Net body (grid pattern)
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(nl, NET_TOP, NET_W, GROUND - NET_TOP);
+ 
+  ctx.strokeStyle = 'rgba(180,180,180,0.6)';
+  ctx.lineWidth = 1;
+  for (let gy = NET_TOP + 12; gy < GROUND; gy += 12) {
+    ctx.beginPath(); ctx.moveTo(nl, gy); ctx.lineTo(nl + NET_W, gy); ctx.stroke();
+  }
+ 
+  // Top band (gold)
+  ctx.fillStyle = '#FFD700';
+  ctx.fillRect(nl - 3, NET_TOP - 6, NET_W + 6, 9);
+  // Band border
+  ctx.strokeStyle = '#B8860B';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(nl - 3, NET_TOP - 6, NET_W + 6, 9);
+  ctx.lineWidth = 1;
+}
+ 
+function drawScene(ctx) {
+  // Sky gradient
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, GROUND);
+  skyGrad.addColorStop(0, '#5BA8E8');
+  skyGrad.addColorStop(1, '#A8D4F5');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, GW, GH);
+ 
+  // Clouds (static decoration)
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  [[80,50,30],[200,35,20],[450,55,25],[550,40,18]].forEach(([cx,cy,cr]) => {
+    ctx.beginPath(); ctx.arc(cx, cy, cr, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+cr*0.8, cy+5, cr*0.65, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx-cr*0.7, cy+5, cr*0.6, 0, Math.PI*2); ctx.fill();
+  });
+ 
+  // Court floor
+  const floorGrad = ctx.createLinearGradient(0, GROUND, 0, GH);
+  floorGrad.addColorStop(0, '#C8A068');
+  floorGrad.addColorStop(1, '#A07840');
+  ctx.fillStyle = floorGrad;
+  ctx.fillRect(0, GROUND, GW, GH - GROUND);
+ 
+  // Court line
+  ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(0, GROUND); ctx.lineTo(GW, GROUND); ctx.stroke();
+ 
+  // Back boundary lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+  ctx.setLineDash([8, 8]);
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(30, GROUND); ctx.lineTo(30, GROUND - 30); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(GW - 30, GROUND); ctx.lineTo(GW - 30, GROUND - 30); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.lineWidth = 1;
+}
+ 
+// ---- Render ----
+function render() {
+  ctx.clearRect(0, 0, GW, GH);
+ 
+  drawScene(ctx);
+  drawNet(ctx);
+  drawPikachu(ctx, gs.player.x, gs.player.y, true);
+  drawPikachu(ctx, gs.cpu.x, gs.cpu.y, false);
+  drawVolleyball(ctx, gs.ball.x, gs.ball.y);
+ 
+  // Scoreboard
+  ctx.fillStyle = 'rgba(0,0,0,0.55)';
+  ctx.beginPath();
+  ctx.roundRect ? ctx.roundRect(GW/2 - 110, 8, 220, 40, 8) : ctx.rect(GW/2 - 110, 8, 220, 40);
+  ctx.fill();
+ 
+  ctx.fillStyle = '#FFD700';
+  ctx.font = 'bold 22px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${gs.pScore}`, GW/2 - 55, 35);
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '16px Arial';
+  ctx.fillText(':', GW/2, 35);
+  ctx.fillStyle = '#FFD700';
+  ctx.font = 'bold 22px Arial, sans-serif';
+  ctx.fillText(`${gs.cScore}`, GW/2 + 55, 35);
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = '11px Arial';
+  ctx.fillText('YOU', GW/2 - 55, 22);
+  ctx.fillText('CPU', GW/2 + 55, 22);
+ 
+  // Point message
+  if (gs.phase === 'point' && !gs.winner) {
+    const msg = gs.lastPoint === 'player' ? '⚡ YOUR POINT!' : '💻 CPU POINT!';
+    const col = gs.lastPoint === 'player' ? '#6EE06E' : '#FF8080';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(GW/2-110, GH/2-28, 220, 52, 10) : ctx.rect(GW/2-110, GH/2-28, 220, 52);
+    ctx.fill();
+    ctx.fillStyle = col;
+    ctx.font = 'bold 22px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(msg, GW/2, GH/2 + 8);
+  }
+ 
+  // Game over screen
+  if (gs.phase === 'over') {
+    ctx.fillStyle = 'rgba(0,0,0,0.72)';
+    ctx.fillRect(0, 0, GW, GH);
+    const isWin = gs.winner === 'player';
+    ctx.fillStyle = isWin ? '#FFD700' : '#FF8080';
+    ctx.font = 'bold 42px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(isWin ? '🎉 YOU WIN! 🎉' : '💻 CPU WINS!', GW/2, GH/2 - 18);
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.font = '18px Arial, sans-serif';
+    ctx.fillText(`${gs.pScore} - ${gs.cScore}`, GW/2, GH/2 + 22);
+    ctx.font = '14px Arial, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.fillText('Press Restart to play again', GW/2, GH/2 + 55);
+  }
+}
+ 
+// ---- Game loop ----
+function loop() {
+  update();
+  render();
+  raf = requestAnimationFrame(loop);
+}
+ 
+// ---- Public API ----
+function openGame() {
+  document.getElementById('gameModal').classList.add('open');
+  if (!canvas) {
+    canvas = document.getElementById('gameCanvas');
+    ctx = canvas.getContext('2d');
+  }
+  document.addEventListener('keydown', onKeyDown);
+  document.addEventListener('keyup', onKeyUp);
+  initGame();
+  if (raf) cancelAnimationFrame(raf);
+  loop();
+}
+ 
+function closeGame() {
+  document.getElementById('gameModal').classList.remove('open');
+  if (raf) { cancelAnimationFrame(raf); raf = null; }
+  document.removeEventListener('keydown', onKeyDown);
+  document.removeEventListener('keyup', onKeyUp);
+  keys = {};
+}
+ 
+function restartGame() {
+  initGame();
+  if (!raf) loop();
+}
+ 
+// Close modal on backdrop click
+document.getElementById('gameModal').addEventListener('click', function(e) {
+  if (e.target === this) closeGame();
+});
+</script>
+ 
 </body>
 </html>
